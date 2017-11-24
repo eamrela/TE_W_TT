@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketsViewDlg" widgetVar="TroubleTicketsViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewTroubleTicketsTitle}">
+            <h:form id="TroubleTicketsViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketsController.selected != null}">
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttId}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttId}" title="#{bundle.ViewTroubleTicketsTitle_ttId}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttDescription}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttDescription}" title="#{bundle.ViewTroubleTicketsTitle_ttDescription}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttTitle}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttTitle}" title="#{bundle.ViewTroubleTicketsTitle_ttTitle}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttSubcategory}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttSubcategory}" title="#{bundle.ViewTroubleTicketsTitle_ttSubcategory}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttCreationDate}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttCreationDate}" title="#{bundle.ViewTroubleTicketsTitle_ttCreationDate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttLastModificationDate}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttLastModificationDate}" title="#{bundle.ViewTroubleTicketsTitle_ttLastModificationDate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttAssignmentGroup}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttAssignmentGroup}" title="#{bundle.ViewTroubleTicketsTitle_ttAssignmentGroup}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttCategory}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttCategory}" title="#{bundle.ViewTroubleTicketsTitle_ttCategory}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttDomain}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttDomain}" title="#{bundle.ViewTroubleTicketsTitle_ttDomain}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttPriority}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttPriority}" title="#{bundle.ViewTroubleTicketsTitle_ttPriority}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttStatus}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttStatus}" title="#{bundle.ViewTroubleTicketsTitle_ttStatus}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_resolvedBy}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.resolvedBy}" title="#{bundle.ViewTroubleTicketsTitle_resolvedBy}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketsLabel_ttCreator}"/>
+                        <h:outputText value="#{troubleTicketsController.selected.ttCreator}" title="#{bundle.ViewTroubleTicketsTitle_ttCreator}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="TroubleTicketsViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

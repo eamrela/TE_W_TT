@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListTroubleTicketsTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h:form id="TroubleTicketsListForm">
+                <p:panel header="#{bundle.ListTroubleTicketsTitle}">
+                    <p:dataTable id="datalist" value="#{troubleTicketsController.items}" var="item"
+                                 selectionMode="single" selection="#{troubleTicketsController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.ttId}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 >
+
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttDescription}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttDescription}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttTitle}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttTitle}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttSubcategory}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttSubcategory}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttCreationDate}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttCreationDate}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttLastModificationDate}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttLastModificationDate}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttAssignmentGroup}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttAssignmentGroup}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttCategory}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttCategory}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttDomain}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttDomain}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttPriority}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttPriority}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttStatus}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttStatus}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_resolvedBy}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.resolvedBy}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTroubleTicketsTitle_ttCreator}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ttCreator}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{troubleTicketsController.prepareCreate}" update=":TroubleTicketsCreateForm" oncomplete="PF('TroubleTicketsCreateDialog').show()"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":TroubleTicketsViewForm" oncomplete="PF('TroubleTicketsViewDialog').show()" disabled="#{empty troubleTicketsController.selected}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TroubleTicketsEditForm" oncomplete="PF('TroubleTicketsEditDialog').show()" disabled="#{empty troubleTicketsController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{troubleTicketsController.destroy}" update=":growl,datalist" disabled="#{empty troubleTicketsController.selected}"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="Create.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

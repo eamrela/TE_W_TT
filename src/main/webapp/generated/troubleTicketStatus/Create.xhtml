@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketStatusCreateDlg" widgetVar="TroubleTicketStatusCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateTroubleTicketStatusTitle}">
+            <h:form id="TroubleTicketStatusCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketStatusController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketStatusLabel_statusName}" for="statusName" />
+                        <p:inputText id="statusName" value="#{troubleTicketStatusController.selected.statusName}" title="#{bundle.CreateTroubleTicketStatusTitle_statusName}" required="true" requiredMessage="#{bundle.CreateTroubleTicketStatusRequiredMessage_statusName}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{troubleTicketStatusController.create}" value="#{bundle.Save}" update="display,:TroubleTicketStatusListForm:datalist,:growl" oncomplete="handleSubmit(args,'TroubleTicketStatusCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="TroubleTicketStatusCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

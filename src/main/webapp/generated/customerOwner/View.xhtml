@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="CustomerOwnerViewDlg" widgetVar="CustomerOwnerViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewCustomerOwnerTitle}">
+            <h:form id="CustomerOwnerViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{customerOwnerController.selected != null}">
+                        <h:outputText value="#{bundle.ViewCustomerOwnerLabel_id}"/>
+                        <h:outputText value="#{customerOwnerController.selected.id}" title="#{bundle.ViewCustomerOwnerTitle_id}"/>
+                        <h:outputText value="#{bundle.ViewCustomerOwnerLabel_fullName}"/>
+                        <h:outputText value="#{customerOwnerController.selected.fullName}" title="#{bundle.ViewCustomerOwnerTitle_fullName}"/>
+                        <h:outputText value="#{bundle.ViewCustomerOwnerLabel_emailAddress}"/>
+                        <h:outputText value="#{customerOwnerController.selected.emailAddress}" title="#{bundle.ViewCustomerOwnerTitle_emailAddress}"/>
+                        <h:outputText value="#{bundle.ViewCustomerOwnerLabel_phoneNumber}"/>
+                        <h:outputText value="#{customerOwnerController.selected.phoneNumber}" title="#{bundle.ViewCustomerOwnerTitle_phoneNumber}"/>
+                        <h:outputText value="#{bundle.ViewCustomerOwnerLabel_jobRole}"/>
+                        <h:outputText value="#{customerOwnerController.selected.jobRole}" title="#{bundle.ViewCustomerOwnerTitle_jobRole}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="CustomerOwnerViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

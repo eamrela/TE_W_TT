@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketTitlesViewDlg" widgetVar="TroubleTicketTitlesViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewTroubleTicketTitlesTitle}">
+            <h:form id="TroubleTicketTitlesViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketTitlesController.selected != null}">
+                        <h:outputText value="#{bundle.ViewTroubleTicketTitlesLabel_id}"/>
+                        <h:outputText value="#{troubleTicketTitlesController.selected.id}" title="#{bundle.ViewTroubleTicketTitlesTitle_id}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketTitlesLabel_titleText}"/>
+                        <h:outputText value="#{troubleTicketTitlesController.selected.titleText}" title="#{bundle.ViewTroubleTicketTitlesTitle_titleText}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="TroubleTicketTitlesViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketInvolvmentCreateDlg" widgetVar="TroubleTicketInvolvmentCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateTroubleTicketInvolvmentTitle}">
+            <h:form id="TroubleTicketInvolvmentCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketInvolvmentController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketInvolvmentLabel_involvmentId}" for="involvmentId" />
+                        <p:inputText id="involvmentId" value="#{troubleTicketInvolvmentController.selected.involvmentId}" title="#{bundle.CreateTroubleTicketInvolvmentTitle_involvmentId}" required="true" requiredMessage="#{bundle.CreateTroubleTicketInvolvmentRequiredMessage_involvmentId}"/>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketInvolvmentLabel_ttId}" for="ttId" />
+                        <p:inputText id="ttId" value="#{troubleTicketInvolvmentController.selected.ttId}" title="#{bundle.CreateTroubleTicketInvolvmentTitle_ttId}" />
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketInvolvmentLabel_involvmentType}" for="involvmentType" />
+                        <p:inputText id="involvmentType" value="#{troubleTicketInvolvmentController.selected.involvmentType}" title="#{bundle.CreateTroubleTicketInvolvmentTitle_involvmentType}" />
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketInvolvmentLabel_involvmentTime}" for="involvmentTime" />
+                        <p:calendar id="involvmentTime" pattern="MM/dd/yyyy HH:mm:ss" value="#{troubleTicketInvolvmentController.selected.involvmentTime}" title="#{bundle.EditTroubleTicketInvolvmentTitle_involvmentTime}"  showOn="button"/>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketInvolvmentLabel_currentGroup}" for="currentGroup" />
+                        <p:selectOneMenu id="currentGroup" value="#{troubleTicketInvolvmentController.selected.currentGroup}" >
+                            <f:selectItems value="#{assignmentGroupsController.itemsAvailableSelectOne}"
+                                           var="currentGroupItem"
+                                           itemValue="#{currentGroupItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketInvolvmentLabel_previousGroup}" for="previousGroup" />
+                        <p:selectOneMenu id="previousGroup" value="#{troubleTicketInvolvmentController.selected.previousGroup}" >
+                            <f:selectItems value="#{assignmentGroupsController.itemsAvailableSelectOne}"
+                                           var="previousGroupItem"
+                                           itemValue="#{previousGroupItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketInvolvmentLabel_involvmentBy}" for="involvmentBy" />
+                        <p:selectOneMenu id="involvmentBy" value="#{troubleTicketInvolvmentController.selected.involvmentBy}" >
+                            <f:selectItems value="#{usersController.itemsAvailableSelectOne}"
+                                           var="involvmentByItem"
+                                           itemValue="#{involvmentByItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{troubleTicketInvolvmentController.create}" value="#{bundle.Save}" update="display,:TroubleTicketInvolvmentListForm:datalist,:growl" oncomplete="handleSubmit(args,'TroubleTicketInvolvmentCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="TroubleTicketInvolvmentCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

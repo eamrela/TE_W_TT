@@ -1,0 +1,378 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      class="no-js css-menubar"
+      xmlns:WE_TT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"/>
+    <meta name="description" content="TT System for Telecom Egypt (WE)"/>
+    <meta name="author" content="Amr El Ansary - amr.el-ansary@hotmail.com"/>
+    <title>WE . TT</title>
+    
+    <link rel="apple-touch-icon" href="#{resource['app/assets/images/apple-touch-icon.png']}"/>
+    <link rel="shortcut icon" href="#{resource['app/assets/images/favicon_we.ico']}"/>
+    
+    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+    <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+    <h:outputScript library="js" name="jsfcrud.js" target="head" />
+    <h:outputStylesheet name="css/jsfcrud.css"/>
+    
+    <h:outputStylesheet name="app/global/css/bootstrap.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/css/bootstrap-extend.min3f0d.css"/>
+    <h:outputStylesheet name="app/assets/css/site.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/vendor/animsition/animsition.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/vendor/asscrollable/asScrollable.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/vendor/switchery/switchery.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/vendor/intro-js/introjs.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/vendor/slidepanel/slidePanel.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/vendor/waves/waves.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/fonts/material-design/material-design.min3f0d.css"/>
+    <h:outputStylesheet name="app/global/fonts/brand-icons/brand-icons.min3f0d.css"/>
+    
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,400italic,700'/>
+    
+    <script src="#{resource['app/global/vendor/modernizr/modernizr.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/breakpoints/breakpoints.min.js']}"></script>
+
+    <f:metadata>
+        <f:viewAction action="#{troubleTicketsController.prepareCreate}"/>
+    </f:metadata>
+    
+    <style>
+        .ui-fileupload-content .ui-progressbar{
+            width: 0px;
+        }
+    </style>
+    </h:head>
+    <h:body>
+    <WE_TT:TopBar/>
+    <WE_TT:NavigationMenu/>
+    <!-- Page -->
+    <div class="page animsition">
+    <div class="page-content">
+        <h:form id="openNewIncidentForm">
+        <div class="row">
+            <div class="col-xlg-9 col-md-9">
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Trouble Ticket Details</h3>
+                    </div>
+                    <div class="panel-body container-fluid">
+                        <div class="form-group form-material row">
+                        <div class="col-sm-12">
+                         <label class="control-label" for="openNewIncidentForm\\:imTitle_input">Title</label>
+                        <p:autoComplete id="imTitle"  
+                            value="#{troubleTicketsController.selected.ttTitle}" 
+                            completeMethod="#{troubleTicketTitlesController.autoCompleteTitle}" 
+                            var="ttTitle" 
+                            itemLabel="#{ttTitle.titleText}" 
+                            itemValue="#{ttTitle.titleText}" 
+                            forceSelection="true"
+                            styleClass="form-control"
+                            style="width:100%;"
+                            maxResults="10">
+                        </p:autoComplete>
+                        </div>
+                        </div>
+                        <div class="form-group form-material row">
+                        <div class="col-sm-12">
+                         <label class="control-label" for="imDescription">Description</label>
+                         <h:inputText id="imDescription" required="true" 
+                                      requiredMessage="Description can't be empty" 
+                                      class="form-control" 
+                                      value="#{troubleTicketsController.selected.ttDescription}"/>
+                        </div>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-xlg-3 col-md-3">
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">System Details</h3>
+                    </div>
+                    <div class="panel-body container-fluid">
+                        <div class="form-group row">
+                        <div class="col-sm-12">
+                         <label class="control-label" for="imCreator">Creator</label>
+                         <h:outputText id="imCreator" value="#{troubleTicketsController.selected.ttCreator.fullName}" class="form-control"/>
+                        </div>
+                        </div>
+                        <div class="form-group  row">
+                        <div class="col-sm-12">
+                         <label class="control-label" for="imCreationTime">Creation Time</label>
+                         <h:outputText id="imCreationTime" value="#{troubleTicketsController.selected.ttCreationDate}" class="form-control">
+                             <f:convertDateTime pattern="yyyy-MM-dd HH:mm:ss"/>
+                         </h:outputText>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-xlg-4 col-md-4">
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Categorization</h3>
+                    </div>
+                    <div class="panel-body container-fluid">
+                        <div class="form-group  row">
+                            <div class="col-sm-6">
+                            <label class="control-label" for="imCategory">Category</label>
+                            <h:selectOneMenu id="imCategory"
+                                             value="#{troubleTicketsController.selected.ttCategory}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Category can't be empty">
+                                <p:ajax update="imSubCategory" />
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{categoriesController.itemsAvailableSelectOne}" 
+                                               var="catergoryItem"
+                                               itemValue="#{catergoryItem}"
+                                               itemLabel="#{catergoryItem.categoryName}"/>
+                            </h:selectOneMenu>
+                            </div>
+                            <div class="col-sm-6">
+                            <label class="control-label" for="imSubCategory">Sub-Category</label>
+                            <h:selectOneMenu id="imSubCategory"
+                                             value="#{troubleTicketsController.selected.ttSubcategory}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="SubCategory can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{troubleTicketsController.selected.ttCategory.subCategoriesCollection}" 
+                                               var="subcatergoryItem"
+                                               itemValue="#{subcatergoryItem.subCategoriesPK.subCategoryName}"
+                                               itemLabel="#{subcatergoryItem.subCategoriesPK.subCategoryName}"/>
+                            </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-group  row">
+                            <div class="col-sm-6">
+                            <label class="control-label" for="imPriority">Priority</label>
+                            <h:selectOneMenu id="imPriority"
+                                             value="#{troubleTicketsController.selected.ttPriority}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Priority can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{troubleTicketPriorityController.itemsAvailableSelectOne}" 
+                                               var="priorityItem"
+                                               itemValue="#{priorityItem}"
+                                               itemLabel="#{priorityItem.priorityName}"/>
+                            </h:selectOneMenu>
+                            </div>
+                            <div class="col-sm-6">
+                            <label class="control-label" for="imDomain">Domain</label>
+                            <h:selectOneMenu id="imDomain"
+                                             value="#{troubleTicketsController.selected.ttDomain}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Domain can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{domainsController.itemsAvailableSelectOne}" 
+                                               var="domainItem"
+                                               itemValue="#{domainItem}"
+                                               itemLabel="#{domainItem.domainName}"/>
+                            </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                            <label class="control-label" for="imAssignment">Assignment Group</label>
+                            <h:selectOneMenu id="imAssignment"
+                                             value="#{troubleTicketsController.selected.ttAssignmentGroup}"
+                                             styleClass="form-control"
+                                             class="form-control"
+                                             required="true"
+                                             requiredMessage="Assignment can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{assignmentGroupsController.itemsAvailableSelectOne}" 
+                                               var="assignmentItem"
+                                               itemValue="#{assignmentItem}"
+                                               itemLabel="#{assignmentItem.groupName}"/>
+                            </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-xlg-4 col-md-4">
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Affected Nodes</h3>
+                    </div>
+                    <div class="panel-body container-fluid">
+                        <div class="row">
+                        <div class="col-sm-12">
+                        <label class="control-label" for="openNewIncidentForm\\:searchNode_input">Search Nodes</label>
+                        <p:autoComplete id="searchNode"  
+                            value="#{nodesController.selected}" 
+                            completeMethod="#{nodesController.autoCompleteNodes}" 
+                            converter="NodesControllerConverter"
+                            var="nodeItem" 
+                            itemLabel="#{nodeItem}" 
+                            itemValue="#{nodeItem}" 
+                            style="width:100%;"
+                            maxResults="10">
+                            <p:ajax event="itemSelect" listener="#{troubleTicketsController.addNode}" 
+                                    update="ttNodes, searchNode"/>
+                        </p:autoComplete>
+                        </div>
+                        </div>
+                        <hr></hr>
+                        <div class="row">
+                        <div class="col-sm-12">
+                            <label class="control-label" for="ttNodes">TT Nodes</label>
+                            <p:dataTable 
+                                id="ttNodes"
+                                var="node" 
+                                value="#{troubleTicketsController.selectedNodes}"
+                                emptyMessage="No affected nodes found!"
+                                style="overflow-x: hidden;">
+                                <p:column headerText="Name" style="font-size: 9px;">
+                                    <h:outputText value="#{node.nodesPK.nodeName}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{node.nodesPK.nodeDomain}" />
+                                </p:column>
+                                <p:column headerText="Type" style="font-size: 9px;">
+                                    <h:outputText value="#{node.nodeType}" />
+                                </p:column>
+                                <p:column headerText="Severity" style="font-size: 9px;">
+                                    <h:outputText value="#{node.severity}" />
+                                </p:column>
+                                <p:column headerText="Remove" style="font-size: 9px;">
+                                    <p:commandLink title="Remove" styleClass="ui-icon ui-icon-close">
+                                        <p:ajax listener="#{troubleTicketsController.removeNode(node)}" update="ttNodes"/>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-xlg-4 col-md-4">
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Attachments</h3>
+                    </div>
+                    <div class="panel-body container-fluid">
+                        <div class="row">
+                        <div class="col-sm-12">
+                        <label class="control-label" for="imAttach">Attach Files:</label>
+                        <p:fileUpload id="imAttach"
+                            fileUploadListener="#{troubleTicketsController.addAttachment}" 
+                            mode="advanced" 
+                            dragDropSupport="false"
+                            update="ttAttachments" 
+                            sizeLimit="3145728" 
+                            fileLimit="10" 
+                            allowTypes="/(\.|\/)*/" 
+                            uploadLabel="Add"
+                            previewWidth="10"
+                            />
+                        </div>
+                        </div>
+                        <hr></hr>
+                        <div class="row">
+                        <div class="col-sm-12">
+                            <label class="control-label" for="ttAttachments">TT Attachments</label>
+                            <p:dataTable 
+                                id="ttAttachments"
+                                var="attachment" 
+                                value="#{troubleTicketsController.selectedAttachments}"
+                                emptyMessage="No attachments nodes found!"
+                                style="overflow-x: hidden;">
+                                <p:column headerText="Name" style="font-size: 9px;">
+                                    <h:outputText value="#{attachment.fileName}" />
+                                </p:column>
+                                <p:column headerText="Remove" style="font-size: 9px;">
+                                    <p:commandLink title="Remove" styleClass="ui-icon ui-icon-close">
+                                        <p:ajax listener="#{troubleTicketsController.removeAttachment(attachment)}" update="ttAttachments"/>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div>
+            <div class="row">
+                <h:commandLink id="createBtn" 
+                                     value="Create"
+                                     class="btn btn-block btn-success waves-effect waves-light"
+                                     action="#{troubleTicketsController.createTT}"
+                                     />
+            </div>
+        </h:form>
+    </div>
+    </div>
+    <!-- End Page -->
+    <WE_TT:Footer/>
+  
+
+    <script src="#{resource['app/global/vendor/bootstrap/bootstrap.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/animsition/animsition.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/asscroll/jquery-asScroll.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/mousewheel/jquery.mousewheel.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/asscrollable/jquery.asScrollable.all.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/ashoverscroll/jquery-asHoverScroll.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/waves/waves.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/switchery/switchery.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/intro-js/intro.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/screenfull/screenfull.min.js']}"></script>
+    <script src="#{resource['app/global/vendor/slidepanel/jquery-slidePanel.min.js']}"></script>
+    <script src="#{resource['app/global/js/core.min.js']}"></script>
+    <script src="#{resource['app/assets/js/site.min.js']}"></script>
+    <script src="#{resource['app/assets/js/sections/menu.min.js']}"></script>
+    <script src="#{resource['app/assets/js/sections/menubar.min.js']}"></script>
+    <script src="#{resource['app/assets/js/sections/gridmenu.min.js']}"></script>
+    <script src="#{resource['app/assets/js/sections/sidebar.min.js']}"></script>
+    <script src="#{resource['app/global/js/configs/config-colors.min.js']}"></script>
+    <script src="#{resource['app/assets/js/configs/config-tour.min.js']}"></script>
+    <script src="#{resource['app/global/js/components/asscrollable.min.js']}"></script>
+    <script src="#{resource['app/global/js/components/animsition.min.js']}"></script>
+    <script src="#{resource['app/global/js/components/slidepanel.min.js']}"></script>
+    <script src="#{resource['app/global/js/components/switchery.min.js']}"></script>
+    <script src="#{resource['app/global/js/components/tabs.min.js']}"></script>
+
+    <script>
+       //<![CDATA[
+    Breakpoints();
+    (function(document, window, $) {
+      'use strict';
+
+      var Site = window.Site;
+      $(document).ready(function() {
+        Site.run();
+      });
+    })(document, window, jQuery);
+    
+    removeClasses();
+     //]]>
+     function removeClasses(){
+         $('#openNewIncidentForm\\imTitle')
+                    .removeClass();
+         $('#openNewIncidentForm\\:imTitle_input') 
+                    .removeClass()
+                    .addClass( "form-control" );
+            
+//        $('#openNewIncidentForm\\searchNode')
+//                    .removeClass();
+//         $('#openNewIncidentForm\\:searchNode_input') 
+//                    .removeClass()
+//                    .addClass( "form-control" );
+     }
+  </script>
+    </h:body>
+</html>
+

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketAttachmentsEditDlg" widgetVar="TroubleTicketAttachmentsEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditTroubleTicketAttachmentsTitle}">
+            <h:form id="TroubleTicketAttachmentsEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketAttachmentsController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditTroubleTicketAttachmentsLabel_attachmentId}" for="attachmentId" />
+                        <p:inputText id="attachmentId" value="#{troubleTicketAttachmentsController.selected.attachmentId}" title="#{bundle.EditTroubleTicketAttachmentsTitle_attachmentId}" required="true" requiredMessage="#{bundle.EditTroubleTicketAttachmentsRequiredMessage_attachmentId}"/>
+                        <p:outputLabel value="#{bundle.EditTroubleTicketAttachmentsLabel_fileName}" for="fileName" />
+                        <p:inputText id="fileName" value="#{troubleTicketAttachmentsController.selected.fileName}" title="#{bundle.EditTroubleTicketAttachmentsTitle_fileName}" />
+                        <p:outputLabel value="#{bundle.EditTroubleTicketAttachmentsLabel_fileLocation}" for="fileLocation" />
+                        <p:inputText id="fileLocation" value="#{troubleTicketAttachmentsController.selected.fileLocation}" title="#{bundle.EditTroubleTicketAttachmentsTitle_fileLocation}" />
+                        <p:outputLabel value="#{bundle.EditTroubleTicketAttachmentsLabel_uploadTime}" for="uploadTime" />
+                        <p:calendar id="uploadTime" pattern="MM/dd/yyyy HH:mm:ss" value="#{troubleTicketAttachmentsController.selected.uploadTime}" title="#{bundle.EditTroubleTicketAttachmentsTitle_uploadTime}"  showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditTroubleTicketAttachmentsLabel_ttId}" for="ttId" />
+                        <p:selectOneMenu id="ttId" value="#{troubleTicketAttachmentsController.selected.ttId}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{troubleTicketsController.itemsAvailableSelectOne}"
+                                           var="ttIdItem"
+                                           itemValue="#{ttIdItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.EditTroubleTicketAttachmentsLabel_uploadedBy}" for="uploadedBy" />
+                        <p:selectOneMenu id="uploadedBy" value="#{troubleTicketAttachmentsController.selected.uploadedBy}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{usersController.itemsAvailableSelectOne}"
+                                           var="uploadedByItem"
+                                           itemValue="#{uploadedByItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{troubleTicketAttachmentsController.update}" value="#{bundle.Save}" update="display,:TroubleTicketAttachmentsListForm:datalist,:growl" oncomplete="handleSubmit(args, 'TroubleTicketAttachmentsEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="TroubleTicketAttachmentsEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

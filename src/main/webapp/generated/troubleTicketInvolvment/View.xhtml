@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketInvolvmentViewDlg" widgetVar="TroubleTicketInvolvmentViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewTroubleTicketInvolvmentTitle}">
+            <h:form id="TroubleTicketInvolvmentViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketInvolvmentController.selected != null}">
+                        <h:outputText value="#{bundle.ViewTroubleTicketInvolvmentLabel_involvmentId}"/>
+                        <h:outputText value="#{troubleTicketInvolvmentController.selected.involvmentId}" title="#{bundle.ViewTroubleTicketInvolvmentTitle_involvmentId}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketInvolvmentLabel_ttId}"/>
+                        <h:outputText value="#{troubleTicketInvolvmentController.selected.ttId}" title="#{bundle.ViewTroubleTicketInvolvmentTitle_ttId}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketInvolvmentLabel_involvmentType}"/>
+                        <h:outputText value="#{troubleTicketInvolvmentController.selected.involvmentType}" title="#{bundle.ViewTroubleTicketInvolvmentTitle_involvmentType}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketInvolvmentLabel_involvmentTime}"/>
+                        <h:outputText value="#{troubleTicketInvolvmentController.selected.involvmentTime}" title="#{bundle.ViewTroubleTicketInvolvmentTitle_involvmentTime}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundle.ViewTroubleTicketInvolvmentLabel_currentGroup}"/>
+                        <h:outputText value="#{troubleTicketInvolvmentController.selected.currentGroup}" title="#{bundle.ViewTroubleTicketInvolvmentTitle_currentGroup}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketInvolvmentLabel_previousGroup}"/>
+                        <h:outputText value="#{troubleTicketInvolvmentController.selected.previousGroup}" title="#{bundle.ViewTroubleTicketInvolvmentTitle_previousGroup}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketInvolvmentLabel_involvmentBy}"/>
+                        <h:outputText value="#{troubleTicketInvolvmentController.selected.involvmentBy}" title="#{bundle.ViewTroubleTicketInvolvmentTitle_involvmentBy}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="TroubleTicketInvolvmentViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

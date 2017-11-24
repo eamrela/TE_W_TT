@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketNodesCreateDlg" widgetVar="TroubleTicketNodesCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle2.CreateTroubleTicketNodesTitle}">
+            <h:form id="TroubleTicketNodesCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketNodesController.selected != null}">
+                        <p:outputLabel value="#{bundle2.CreateTroubleTicketNodesLabel_nodeTtId}" for="nodeTtId" />
+                        <p:inputText id="nodeTtId" value="#{troubleTicketNodesController.selected.nodeTtId}" title="#{bundle2.CreateTroubleTicketNodesTitle_nodeTtId}" required="true" requiredMessage="#{bundle2.CreateTroubleTicketNodesRequiredMessage_nodeTtId}"/>
+                        <p:outputLabel value="#{bundle2.CreateTroubleTicketNodesLabel_nodes}" for="nodes" />
+                        <p:selectOneMenu id="nodes" value="#{troubleTicketNodesController.selected.nodes}" >
+                            <f:selectItems value="#{nodesController.itemsAvailableSelectOne}"
+                                           var="nodesItem"
+                                           itemValue="#{nodesItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle2.CreateTroubleTicketNodesLabel_ttId}" for="ttId" />
+                        <p:selectOneMenu id="ttId" value="#{troubleTicketNodesController.selected.ttId}" >
+                            <f:selectItems value="#{troubleTicketsController.itemsAvailableSelectOne}"
+                                           var="ttIdItem"
+                                           itemValue="#{ttIdItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{troubleTicketNodesController.create}" value="#{bundle2.Save}" update="display,:TroubleTicketNodesListForm:datalist,:growl" oncomplete="handleSubmit(args,'TroubleTicketNodesCreateDialog');"/>
+                    <p:commandButton value="#{bundle2.Cancel}" onclick="TroubleTicketNodesCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

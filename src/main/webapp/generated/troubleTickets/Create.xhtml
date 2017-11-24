@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketsCreateDlg" widgetVar="TroubleTicketsCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateTroubleTicketsTitle}">
+            <h:form id="TroubleTicketsCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketsController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttId}" for="ttId" />
+                        <p:inputText id="ttId" value="#{troubleTicketsController.selected.ttId}" title="#{bundle.CreateTroubleTicketsTitle_ttId}" required="true" requiredMessage="#{bundle.CreateTroubleTicketsRequiredMessage_ttId}"/>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttDescription}" for="ttDescription" />
+                        <p:inputText id="ttDescription" value="#{troubleTicketsController.selected.ttDescription}" title="#{bundle.CreateTroubleTicketsTitle_ttDescription}" />
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttTitle}" for="ttTitle" />
+                        <p:inputText id="ttTitle" value="#{troubleTicketsController.selected.ttTitle}" title="#{bundle.CreateTroubleTicketsTitle_ttTitle}" />
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttSubcategory}" for="ttSubcategory" />
+                        <p:inputText id="ttSubcategory" value="#{troubleTicketsController.selected.ttSubcategory}" title="#{bundle.CreateTroubleTicketsTitle_ttSubcategory}" />
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttCreationDate}" for="ttCreationDate" />
+                        <p:calendar id="ttCreationDate" pattern="MM/dd/yyyy HH:mm:ss" value="#{troubleTicketsController.selected.ttCreationDate}" title="#{bundle.EditTroubleTicketsTitle_ttCreationDate}"  showOn="button"/>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttLastModificationDate}" for="ttLastModificationDate" />
+                        <p:calendar id="ttLastModificationDate" pattern="MM/dd/yyyy HH:mm:ss" value="#{troubleTicketsController.selected.ttLastModificationDate}" title="#{bundle.EditTroubleTicketsTitle_ttLastModificationDate}"  showOn="button"/>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttAssignmentGroup}" for="ttAssignmentGroup" />
+                        <p:selectOneMenu id="ttAssignmentGroup" value="#{troubleTicketsController.selected.ttAssignmentGroup}" >
+                            <f:selectItems value="#{assignmentGroupsController.itemsAvailableSelectOne}"
+                                           var="ttAssignmentGroupItem"
+                                           itemValue="#{ttAssignmentGroupItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttCategory}" for="ttCategory" />
+                        <p:selectOneMenu id="ttCategory" value="#{troubleTicketsController.selected.ttCategory}" >
+                            <f:selectItems value="#{categoriesController.itemsAvailableSelectOne}"
+                                           var="ttCategoryItem"
+                                           itemValue="#{ttCategoryItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttDomain}" for="ttDomain" />
+                        <p:selectOneMenu id="ttDomain" value="#{troubleTicketsController.selected.ttDomain}" >
+                            <f:selectItems value="#{domainsController.itemsAvailableSelectOne}"
+                                           var="ttDomainItem"
+                                           itemValue="#{ttDomainItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttPriority}" for="ttPriority" />
+                        <p:selectOneMenu id="ttPriority" value="#{troubleTicketsController.selected.ttPriority}" >
+                            <f:selectItems value="#{troubleTicketPriorityController.itemsAvailableSelectOne}"
+                                           var="ttPriorityItem"
+                                           itemValue="#{ttPriorityItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttStatus}" for="ttStatus" />
+                        <p:selectOneMenu id="ttStatus" value="#{troubleTicketsController.selected.ttStatus}" >
+                            <f:selectItems value="#{troubleTicketStatusController.itemsAvailableSelectOne}"
+                                           var="ttStatusItem"
+                                           itemValue="#{ttStatusItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_resolvedBy}" for="resolvedBy" />
+                        <p:selectOneMenu id="resolvedBy" value="#{troubleTicketsController.selected.resolvedBy}" >
+                            <f:selectItems value="#{usersController.itemsAvailableSelectOne}"
+                                           var="resolvedByItem"
+                                           itemValue="#{resolvedByItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateTroubleTicketsLabel_ttCreator}" for="ttCreator" />
+                        <p:selectOneMenu id="ttCreator" value="#{troubleTicketsController.selected.ttCreator}" >
+                            <f:selectItems value="#{usersController.itemsAvailableSelectOne}"
+                                           var="ttCreatorItem"
+                                           itemValue="#{ttCreatorItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{troubleTicketsController.create}" value="#{bundle.Save}" update="display,:TroubleTicketsListForm:datalist,:growl" oncomplete="handleSubmit(args,'TroubleTicketsCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="TroubleTicketsCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketLogEditDlg" widgetVar="TroubleTicketLogEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditTroubleTicketLogTitle}">
+            <h:form id="TroubleTicketLogEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketLogController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditTroubleTicketLogLabel_commentText}" for="commentText" />
+                        <p:inputText id="commentText" value="#{troubleTicketLogController.selected.commentText}" title="#{bundle.EditTroubleTicketLogTitle_commentText}" />
+                        <p:outputLabel value="#{bundle.EditTroubleTicketLogLabel_commentTime}" for="commentTime" />
+                        <p:calendar id="commentTime" pattern="MM/dd/yyyy HH:mm:ss" value="#{troubleTicketLogController.selected.commentTime}" title="#{bundle.EditTroubleTicketLogTitle_commentTime}"  showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditTroubleTicketLogLabel_commentId}" for="commentId" />
+                        <p:inputText id="commentId" value="#{troubleTicketLogController.selected.commentId}" title="#{bundle.EditTroubleTicketLogTitle_commentId}" required="true" requiredMessage="#{bundle.EditTroubleTicketLogRequiredMessage_commentId}"/>
+                        <p:outputLabel value="#{bundle.EditTroubleTicketLogLabel_ttId}" for="ttId" />
+                        <p:selectOneMenu id="ttId" value="#{troubleTicketLogController.selected.ttId}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{troubleTicketsController.itemsAvailableSelectOne}"
+                                           var="ttIdItem"
+                                           itemValue="#{ttIdItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.EditTroubleTicketLogLabel_commentBy}" for="commentBy" />
+                        <p:selectOneMenu id="commentBy" value="#{troubleTicketLogController.selected.commentBy}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{usersController.itemsAvailableSelectOne}"
+                                           var="commentByItem"
+                                           itemValue="#{commentByItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{troubleTicketLogController.update}" value="#{bundle.Save}" update="display,:TroubleTicketLogListForm:datalist,:growl" oncomplete="handleSubmit(args, 'TroubleTicketLogEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="TroubleTicketLogEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

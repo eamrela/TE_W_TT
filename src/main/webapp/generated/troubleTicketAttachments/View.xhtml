@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketAttachmentsViewDlg" widgetVar="TroubleTicketAttachmentsViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewTroubleTicketAttachmentsTitle}">
+            <h:form id="TroubleTicketAttachmentsViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketAttachmentsController.selected != null}">
+                        <h:outputText value="#{bundle.ViewTroubleTicketAttachmentsLabel_attachmentId}"/>
+                        <h:outputText value="#{troubleTicketAttachmentsController.selected.attachmentId}" title="#{bundle.ViewTroubleTicketAttachmentsTitle_attachmentId}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketAttachmentsLabel_fileName}"/>
+                        <h:outputText value="#{troubleTicketAttachmentsController.selected.fileName}" title="#{bundle.ViewTroubleTicketAttachmentsTitle_fileName}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketAttachmentsLabel_fileLocation}"/>
+                        <h:outputText value="#{troubleTicketAttachmentsController.selected.fileLocation}" title="#{bundle.ViewTroubleTicketAttachmentsTitle_fileLocation}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketAttachmentsLabel_uploadTime}"/>
+                        <h:outputText value="#{troubleTicketAttachmentsController.selected.uploadTime}" title="#{bundle.ViewTroubleTicketAttachmentsTitle_uploadTime}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundle.ViewTroubleTicketAttachmentsLabel_ttId}"/>
+                        <h:outputText value="#{troubleTicketAttachmentsController.selected.ttId}" title="#{bundle.ViewTroubleTicketAttachmentsTitle_ttId}"/>
+                        <h:outputText value="#{bundle.ViewTroubleTicketAttachmentsLabel_uploadedBy}"/>
+                        <h:outputText value="#{troubleTicketAttachmentsController.selected.uploadedBy}" title="#{bundle.ViewTroubleTicketAttachmentsTitle_uploadedBy}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="TroubleTicketAttachmentsViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

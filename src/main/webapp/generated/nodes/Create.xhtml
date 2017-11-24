@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="NodesCreateDlg" widgetVar="NodesCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateNodesTitle}">
+            <h:form id="NodesCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{nodesController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateNodesLabel_nodesPK_nodeName}" for="nodesPK_nodeName" />
+                        <p:inputText id="nodesPK_nodeName" value="#{nodesController.selected.nodesPK.nodeName}" title="#{bundle.CreateNodesTitle_nodesPK_nodeName}" required="true" requiredMessage="#{bundle.CreateNodesRequiredMessage_nodesPK_nodeName}"/>
+                        <p:outputLabel value="#{bundle.CreateNodesLabel_nodeLocation}" for="nodeLocation" />
+                        <p:inputText id="nodeLocation" value="#{nodesController.selected.nodeLocation}" title="#{bundle.CreateNodesTitle_nodeLocation}" />
+                        <p:outputLabel value="#{bundle.CreateNodesLabel_nodeType}" for="nodeType" />
+                        <p:inputText id="nodeType" value="#{nodesController.selected.nodeType}" title="#{bundle.CreateNodesTitle_nodeType}" />
+                        <p:outputLabel value="#{bundle.CreateNodesLabel_severity}" for="severity" />
+                        <p:inputText id="severity" value="#{nodesController.selected.severity}" title="#{bundle.CreateNodesTitle_severity}" />
+                        <p:outputLabel value="#{bundle.CreateNodesLabel_domains}" for="domains" />
+                        <p:selectOneMenu id="domains" value="#{nodesController.selected.domains}" required="true" requiredMessage="#{bundle.EditNodesRequiredMessage_domains}">
+                            <f:selectItems value="#{domainsController.itemsAvailableSelectOne}"
+                                           var="domainsItem"
+                                           itemValue="#{domainsItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{nodesController.create}" value="#{bundle.Save}" update="display,:NodesListForm:datalist,:growl" oncomplete="handleSubmit(args,'NodesCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="NodesCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

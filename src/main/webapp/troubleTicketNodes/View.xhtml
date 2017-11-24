@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TroubleTicketNodesViewDlg" widgetVar="TroubleTicketNodesViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle2.ViewTroubleTicketNodesTitle}">
+            <h:form id="TroubleTicketNodesViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{troubleTicketNodesController.selected != null}">
+                        <h:outputText value="#{bundle2.ViewTroubleTicketNodesLabel_nodeTtId}"/>
+                        <h:outputText value="#{troubleTicketNodesController.selected.nodeTtId}" title="#{bundle2.ViewTroubleTicketNodesTitle_nodeTtId}"/>
+                        <h:outputText value="#{bundle2.ViewTroubleTicketNodesLabel_nodes}"/>
+                        <h:outputText value="#{troubleTicketNodesController.selected.nodes}" title="#{bundle2.ViewTroubleTicketNodesTitle_nodes}"/>
+                        <h:outputText value="#{bundle2.ViewTroubleTicketNodesLabel_ttId}"/>
+                        <h:outputText value="#{troubleTicketNodesController.selected.ttId}" title="#{bundle2.ViewTroubleTicketNodesTitle_ttId}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle2.Close}" onclick="TroubleTicketNodesViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
