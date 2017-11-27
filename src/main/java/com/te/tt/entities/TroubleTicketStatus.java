@@ -88,7 +88,7 @@ public class TroubleTicketStatus implements Serializable {
 
     @Override
     public String toString() {
-        return "com.te.tt.entities.TroubleTicketStatus[ statusName=" + statusName + " ]";
+        return statusName;
     }
     
 }

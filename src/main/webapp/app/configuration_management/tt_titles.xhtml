@@ -2,7 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      class="no-js css-menubar">
+      class="no-js css-menubar"
+      xmlns:WE_TT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -30,35 +34,83 @@
     <h:outputStylesheet name="app/global/vendor/waves/waves.min3f0d.css"/>
     <h:outputStylesheet name="app/global/fonts/material-design/material-design.min3f0d.css"/>
     <h:outputStylesheet name="app/global/fonts/brand-icons/brand-icons.min3f0d.css"/>
+    
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,400italic,700'/>
+    
     <script src="#{resource['app/global/vendor/modernizr/modernizr.min.js']}"></script>
     <script src="#{resource['app/global/vendor/breakpoints/breakpoints.min.js']}"></script>
+    <style>
+        .ui-growl{top: 120px;}
+        .tabColor {
+            background: white;
+        }
+    </style>
+    <f:metadata>
+        <f:viewAction action="#{troubleTicketsController.prepareSearch}"/>
+    </f:metadata>
     <script>
        //<![CDATA[
     Breakpoints();
      //]]>
-    </script>
-   </h:head>
-    <h:body class="page-error page-error-400 layout-full">
-
-  <div class="page animsition vertical-align text-center" data-animsition-in="fade-in"
-  data-animsition-out="fade-out">
-    <div class="page-content vertical-align-middle">
-      <header>
-        <h1 class="animation-slide-top">400</h1>
-        <p>Page Not Found !</p>
-      </header>
-      <p class="error-advise">YOU SEEM TO BE TRYING TO FIND YOU WAY HOME</p>
-      <a class="btn btn-primary btn-round" href="#{request.contextPath}">GO TO HOME PAGE</a>
-
-      <footer class="page-copyright">
-        <p>WEBSITE BY Ericsson Software Team</p>
-        <p>© 2017. All RIGHT RESERVED.</p>
-      </footer>
+  </script>
+    </h:head>
+    <h:body>
+    <WE_TT:TopBar/>
+    <WE_TT:NavigationMenu/>
+    <!-- Page -->
+    <div class="page">
+    <div class="page-content">
+        <h:form id="titlesForm">
+            <p:growl id="growl" sticky="false"/>
+            <div class="row">
+            <div class="col-xlg-12 col-md-12">
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Trouble Ticket Titles</h3>
+                    </div>
+                    <div class="panel-body container-fluid">
+                        <div class="form-group form-material row">
+                            <div class="col-sm-12">
+                                <p:dataTable id="titlesTbl"
+                                             var="title" 
+                                             value="#{troubleTicketTitlesController.items}"
+                                             paginator="true"
+                                             paginatorPosition="bottom"
+                                             rows="20"
+                                             rowKey="#{title.id}"
+                                             selection="#{troubleTicketTitlesController.selected}"
+                                             selectionMode="single">
+                                    
+                                    <p:ajax event="rowSelect" 
+                                            update="deleteButton createButton" />
+                                    
+                                    <p:column headerText="Id" style="font-size: 9px;">
+                                        <h:outputText value="#{title.id}" />
+                                    </p:column>
+                                    <p:column headerText="Title" style="font-size: 9px;"
+                                              filterBy="#{title.titleText}" filterMatchMode="contains">
+                                        <h:outputText value="#{title.titleText}" />
+                                    </p:column>
+                                     <f:facet name="footer">
+                                         <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{troubleTicketTitlesController.prepareCreate}" update=":addTitleForm" oncomplete="PF('addTitleDlg').show()"/>
+                                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{troubleTicketTitlesController.destroy}" update=":titlesForm:growl,:titlesForm:titlesTbl" disabled="#{empty troubleTicketTitlesController.selected}"/>
+                                    </f:facet>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </h:form>
     </div>
-  </div>
-  <!-- End Page -->
+    </div>
+    <!-- End Page -->
+    <WE_TT:Footer/>
+    
+    <ui:include src="modals/add_title.xhtml"/>   
 
-
+    
     <script src="#{resource['app/global/vendor/bootstrap/bootstrap.min.js']}"></script>
     <script src="#{resource['app/global/vendor/animsition/animsition.min.js']}"></script>
     <script src="#{resource['app/global/vendor/asscroll/jquery-asScroll.min.js']}"></script>
@@ -84,8 +136,8 @@
     <script src="#{resource['app/global/js/components/switchery.min.js']}"></script>
     <script src="#{resource['app/global/js/components/tabs.min.js']}"></script>
 
-
-  <script>
+    <script>
+       //<![CDATA[
     (function(document, window, $) {
       'use strict';
 
@@ -94,12 +146,24 @@
         Site.run();
       });
     })(document, window, jQuery);
+    
+    removeClasses();
+     //]]>
+     function removeClasses(){
+             $('#searchTTForm\\:accordion\\:searchFrom')
+                    .removeClass();
+             $('#searchTTForm\\:accordion\\:searchFrom_input')
+                    .removeClass()
+                    .addClass( "form-control" );
+            
+            $('#searchTTForm\\:accordion\\:searchTo')
+                    .removeClass();
+            $('#searchTTForm\\:accordion\\:searchTo_input') 
+                    .removeClass()
+                    .addClass( "form-control" );
+         
+        }
   </script>
-
-
-
-</h:body>
-
-
-
+    </h:body>
 </html>
+

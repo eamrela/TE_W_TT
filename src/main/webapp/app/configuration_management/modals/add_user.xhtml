@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+        
+        <p:dialog id="addUserDlgId" modal="true" widgetVar="addUserDlg" closeOnEscape="true" resizable="false" height="460" width="450" appendTo="@(body)" header="Add User">
+            <h:form id="addUserForm">
+
+                <h:panelGroup rendered="#{usersController.selected!=null}">
+                    <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                             <label class="control-label">Username:</label>
+                             <h:inputText value="#{usersController.selected.userName}" 
+                                          class="form-control"
+                                          required="true" 
+                                          requiredMessage="User Name can't be empty"/>
+                        </div>
+                        <div class="col-sm-6">
+                             <label class="control-label">Full Name:</label>
+                             <h:inputText value="#{usersController.selected.fullName}" 
+                                          required="true" 
+                                          class="form-control"
+                                          requiredMessage="Full Name can't be empty"/>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                 <label class="control-label">Email:</label>
+                                 <h:inputText value="#{usersController.selected.emailAddress}" 
+                                              required="true" 
+                                          requiredMessage="Email can't be empty"
+                                          class="form-control"/>
+                            </div>
+                            <div class="col-sm-6">
+                                 <label class="control-label">Job Role:</label>
+                                 <h:inputText value="#{usersController.selected.jobRole}" 
+                                          class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                 <label class="control-label">Phone Number:</label>
+                                 <h:inputText value="#{usersController.selected.phoneNumber}" 
+                                          class="form-control"
+                                          required="true" 
+                                          requiredMessage="Phone number can't be empty"/>
+                            </div>
+                            <div class="col-sm-6">
+                                 <label class="control-label">Initial Password:</label>
+                                 <h:inputText value="#{usersController.selected.userPassword}" 
+                                          class="form-control"
+                                          required="true" 
+                                          requiredMessage="Password can't be empty"/>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                 <label class="control-label">User Role:</label>
+                                 <h:selectOneMenu 
+                                     value="#{usersController.selectedUserRole}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="User role can't be empty">
+                                     <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                     <f:selectItems value="#{userRolesController.itemsAvailableSelectOne}" 
+                                               var="userRoleItem"
+                                               itemValue="#{userRoleItem}"
+                                               itemLabel="#{userRoleItem.roleName}"/>
+                            </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <p:commandButton class="btn btn-block btn-success" actionListener="#{usersController.createUser}" 
+                                             value="Create"
+                                             update=":usersForm:usersTbl,:usersForm:growl" 
+                                             oncomplete="handleSubmit(args, 'addUserDlg');"/>
+                          
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                             <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="addUserDlg.hide()"/>
+                        </div>
+                    </div>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    
+    </ui:composition>
+</html>
+

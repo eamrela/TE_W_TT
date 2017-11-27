@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+        
+        <p:dialog id="addNodeDlgId" modal="true" widgetVar="addNodeDlg" closeOnEscape="true" resizable="false" height="260" width="350" appendTo="@(body)" header="Add Node">
+            <h:form id="addNodeForm">
+
+                <h:panelGroup rendered="#{nodesController.selected!=null}">
+                    <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                             <label class="control-label">Node Name:</label>
+                             <h:inputText id="nodesPK_nodeName" value="#{nodesController.selected.nodesPK.nodeName}" 
+                                          required="true" 
+                                          class="form-control"
+                                          requiredMessage="Node Name can't be empty"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="control-label">Node Domain:</label>
+                            <h:selectOneMenu id="imDomain"
+                                             value="#{nodesController.selected.domains}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Domain can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{domainsController.itemsAvailableSelectOne}" 
+                                               var="domainItem"
+                                               itemValue="#{domainItem}"
+                                               itemLabel="#{domainItem.domainName}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                 <label class="control-label">Node Location:</label>
+                                 <h:inputText value="#{nodesController.selected.nodeLocation}" 
+                                          class="form-control"/>
+                            </div>
+                            <div class="col-sm-6">
+                                 <label class="control-label">Node Type:</label>
+                                 <h:inputText value="#{nodesController.selected.nodeType}" 
+                                          class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                 <label class="control-label">Node Severity</label>
+                                 <h:selectOneMenu 
+                                     value="#{nodesController.selected.severity}"
+                                             styleClass="form-control">
+                                <f:selectItem itemLabel="P1" itemValue="P1"/>
+                                <f:selectItem itemLabel="P2" itemValue="P2"/>
+                                <f:selectItem itemLabel="P3" itemValue="P3"/>
+                                <f:selectItem itemLabel="P4" itemValue="P4"/>
+                            </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <p:commandButton class="btn btn-block btn-success" actionListener="#{nodesController.create}" 
+                                             value="Create"
+                                             update=":nodesForm:nodesTbl,:nodesForm:growl" 
+                                             oncomplete="handleSubmit(args, 'addNodeDlg');"/>
+                          
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                             <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="addNodeDlg.hide()"/>
+                        </div>
+                    </div>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    
+    </ui:composition>
+</html>
+

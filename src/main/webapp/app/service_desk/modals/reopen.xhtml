@@ -7,29 +7,23 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition>
         
-        <p:dialog id="changeStatusDlgId" modal="true" widgetVar="changeStatusDlg" closeOnEscape="true" resizable="false" height="160" width="440" appendTo="@(body)" header="Change Status/Assign">
-            <h:form id="changeStatusForm">
+        <p:dialog id="reopenDlgId" modal="true" widgetVar="reopenDlg" closeOnEscape="true" resizable="false" height="360" width="440" appendTo="@(body)" header="Re-Open">
+            <h:form id="reopenForm">
 
                 <h:panelGroup rendered="#{troubleTicketsController.selectedTT!=null}">
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                            <div class="form-group">
-                            <label class="control-label" for="ttStatus">Status:</label>
-                             <h:selectOneMenu id="ttStatus"
-                                              value="#{troubleTicketsController.selectedTTEdit_Status}"
-                                             styleClass="form-control"
-                                             required="true"
-                                             requiredMessage="Status can't be empty"
-                                             >
-                            <f:selectItem itemLabel="" itemValue="#{null}"/>
-                            <f:selectItems value="#{troubleTicketStatusController.itemsAvailableSelectOne}" 
-                                            var="statusItem"
-                                            itemValue="#{statusItem}"
-                                            itemLabel="#{statusItem}"/>
-                            </h:selectOneMenu>
-                            </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label" for="resolutionAction">Comment:</label>
+                            <h:inputTextarea id="resolutionAction"
+                                             class="form-control" 
+                                             value="#{troubleTicketsController.selectedTTEdit_reopenComment}"
+                                             rows="3"/>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label class="control-label" for="assignentPerson">Assignment Group:</label>
                                 <h:selectOneMenu id="assignentPerson"
@@ -49,14 +43,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-6">
-                            <p:commandButton class="btn btn-block btn-success" actionListener="#{troubleTicketsController.updateStatus}" 
-                                             value="Update"
+                            <p:commandButton class="btn btn-block btn-success" actionListener="#{troubleTicketsController.reopen}" 
+                                             value="Re-Open"
                                              update=":incidentQueueForm:userTTs,:incidentQueueForm:growl" 
-                                             oncomplete="handleSubmit(args, 'changeStatusDlg');"/>
+                                             oncomplete="handleSubmit(args, 'reopenDlg');"/>
                           
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6">
-                             <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="changeStatusDlg.hide()"/>
+                             <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="reopenDlg.hide()"/>
                         </div>
                     </div>
 

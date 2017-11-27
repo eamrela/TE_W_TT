@@ -77,6 +77,8 @@ public class Users implements Serializable {
     private Collection<AssignmentGroups> assignmentGroupsCollection1;
     @OneToMany(mappedBy = "involvmentBy")
     private Collection<TroubleTicketInvolvment> troubleTicketInvolvmentCollection;
+    @ManyToMany(mappedBy = "usersCollection")
+    private Collection<UserRoles> userRolesCollection;
 
     public Users() {
     }
@@ -229,4 +231,12 @@ public class Users implements Serializable {
         return "com.te.tt.entities.Users[ userName=" + userName + " ]";
     }
     
+    @XmlTransient
+    public Collection<UserRoles> getUserRolesCollection() {
+        return userRolesCollection;
+    }
+
+    public void setUserRolesCollection(Collection<UserRoles> userRolesCollection) {
+        this.userRolesCollection = userRolesCollection;
+    }
 }

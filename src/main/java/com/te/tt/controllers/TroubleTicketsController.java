@@ -12,6 +12,7 @@ import com.te.tt.entities.TroubleTicketAttachments;
 import com.te.tt.entities.TroubleTicketInvolvment;
 import com.te.tt.entities.TroubleTicketLog;
 import com.te.tt.entities.TroubleTicketNodes;
+import com.te.tt.entities.TroubleTicketStatus;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,8 +49,12 @@ public class TroubleTicketsController implements Serializable {
     @EJB
     private com.te.tt.beans.TroubleTicketsFacade ejbFacade;
     private List<TroubleTickets> items = null;
+    private List<TroubleTickets> searchResult = null;
     private TroubleTickets selected;
     private TroubleTickets selectedTT;
+    private TroubleTickets searchAbleTT;
+    private Date searchFrom;
+    private Date searchTo;
     private List<Nodes> selectedNodes = null;
     private List<UploadedFile> selectedAttachments = null;
     private Configurations conf = null;
@@ -72,10 +78,126 @@ public class TroubleTicketsController implements Serializable {
     
     private AssignmentGroups selectedTTEdit_AssignmentGroup;
     private String selectedTTEdit_resolutionAction;
+    private String selectedTTEdit_reopenComment;
+    private boolean selectedTTEdit_returnToInititaor;
+    private TroubleTicketStatus selectedTTEdit_Status;
+    
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
 
+    public TroubleTickets getSearchAbleTT() {
+        return searchAbleTT;
+    }
+
+    public void setSearchAbleTT(TroubleTickets searchAbleTT) {
+        this.searchAbleTT = searchAbleTT;
+    }
+
+    public Date getSearchFrom() {
+        return searchFrom;
+    }
+
+    public Date getSearchTo() {
+        return searchTo;
+    }
+
+    public void setSearchFrom(Date searchFrom) {
+        this.searchFrom = searchFrom;
+    }
+
+    public void setSearchTo(Date searchTo) {
+        this.searchTo = searchTo;
+    }
+    
+    
+
+    public void prepareSearch(){
+        searchAbleTT = new TroubleTickets();
+    }
+    public boolean isContextMenuChangeStatusDisabled() {
+        if(selectedTT!=null){
+            if(selectedTT.getTtStatus().getStatusName().equals("Cancelled") ||
+                    selectedTT.getTtStatus().getStatusName().equals("Closed")){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isContextMenuStartWorkingDisabled() {
+        if(selectedTT!=null){
+            if(!selectedTT.getTtStatus().getStatusName().equals("Queued") || 
+                    !selectedTT.getTtStatus().getStatusName().equals("Assigned") ||
+                    selectedTT.getTtStatus().getStatusName().equals("Cancelled") ||
+                    selectedTT.getTtStatus().getStatusName().equals("Closed")){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isContextMenuReopenDisabled() {
+        if(selectedTT!=null){
+            if(selectedTT.getTtStatus().getStatusName().equals("Cleared")){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isContextMenuReassignDisabled() {
+        if(selectedTT!=null){
+            if(selectedTT.getTtStatus().getStatusName().equals("Cancelled") ||
+                    selectedTT.getTtStatus().getStatusName().equals("Closed")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isContextMenuResolveDisabled() {
+        if(selectedTT!=null){
+            if(selectedTT.getTtStatus().getStatusName().equals("Cancelled") ||
+                    selectedTT.getTtStatus().getStatusName().equals("Closed") || 
+                    selectedTT.getTtStatus().getStatusName().equals("Cleared")){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public TroubleTicketStatus getSelectedTTEdit_Status() {
+        return selectedTTEdit_Status;
+    }
+
+    public void setSelectedTTEdit_Status(TroubleTicketStatus selectedTTEdit_Status) {
+        this.selectedTTEdit_Status = selectedTTEdit_Status;
+    }
+    
+    
+
+    public boolean isSelectedTTEdit_returnToInititaor() {
+        return selectedTTEdit_returnToInititaor;
+    }
+
+    public void setSelectedTTEdit_returnToInititaor(boolean selectedTTEdit_returnToInititaor) {
+        this.selectedTTEdit_returnToInititaor = selectedTTEdit_returnToInititaor;
+    }
+    
+    
+    
     public String getSelectedTTEdit_resolutionAction() {
         return selectedTTEdit_resolutionAction;
     }
+
+    public String getSelectedTTEdit_reopenComment() {
+        return selectedTTEdit_reopenComment;
+    }
+
+    public void setSelectedTTEdit_reopenComment(String selectedTTEdit_reopenComment) {
+        this.selectedTTEdit_reopenComment = selectedTTEdit_reopenComment;
+    }
+    
+    
 
     public void setSelectedTTEdit_resolutionAction(String selectedTTEdit_resolutionAction) {
         this.selectedTTEdit_resolutionAction = selectedTTEdit_resolutionAction;
@@ -415,17 +537,32 @@ public class TroubleTicketsController implements Serializable {
             selectedTT.setTroubleTicketLogCollection(new ArrayList<TroubleTicketLog>());
             selectedTT.getTroubleTicketLogCollection().add(troubleTicketLogController.create());
         } 
-        update();
+        updateEdit();
         troubleTicketLogController.prepareCreate();
         }
     }
     
-    
+    public void setAssignmentToInititaor(){
+        if(selectedTT!=null){
+            if(selectedTTEdit_returnToInititaor){
+            selectedTTEdit_AssignmentGroup = selectedTT.getTtInitatorGroup();
+            }else{
+            selectedTTEdit_AssignmentGroup = selectedTT.getTtAssignmentGroup();
+            }
+        }
+    }
     
     public void prepareEdit(){
         if(selectedTT!=null){
+            selectedTTEdit_AssignmentGroup = null;
+            selectedTTEdit_resolutionAction = null;
+            selectedTTEdit_reopenComment = null;
+            selectedTTEdit_returnToInititaor = false;
+            selectedTTEdit_Status = null;
+          
             selectedTTEdit_AssignmentGroup = selectedTT.getTtAssignmentGroup();
             selectedTTEdit_resolutionAction = selectedTT.getResolutionAction();
+            selectedTTEdit_Status = selectedTT.getTtStatus();
         }
     }
     public void updateReassign(){
@@ -450,10 +587,210 @@ public class TroubleTicketsController implements Serializable {
           updateEdit();
         }
     }
-    
     public void updateResolve(){
         if(selectedTT!=null && selectedTTEdit_resolutionAction!=null){
+            troubleTicketInvolvmentController.prepareCreate();
+            troubleTicketInvolvmentController.getSelected().setTtId(selectedTT);
+            troubleTicketInvolvmentController.getSelected().setInvolvmentBy(usersController.getLoggedInUser());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentTime(new Date());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentType("Resolution");
+            troubleTicketInvolvmentController.getSelected().setPreviousGroup(selectedTT.getTtAssignmentGroup());
+            troubleTicketInvolvmentController.getSelected().setCurrentGroup(selectedTTEdit_AssignmentGroup);
             
+            selectedTT.setResolutionAction(selectedTTEdit_resolutionAction);
+            selectedTT.setTtAssignmentGroup(selectedTTEdit_AssignmentGroup);
+            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Cleared"));
+            selectedTT.setResolvedBy(usersController.getLoggedInUser());
+            
+            if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
+            selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }else{
+                selectedTT.setTroubleTicketInvolvmentCollection(new ArrayList<TroubleTicketInvolvment>());
+                selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }
+           
+          updateEdit();
         }
     }
+    public void updateStatus(){
+      if(selectedTT!=null && selectedTTEdit_Status!=null){
+            troubleTicketInvolvmentController.prepareCreate();
+            troubleTicketInvolvmentController.getSelected().setTtId(selectedTT);
+            troubleTicketInvolvmentController.getSelected().setInvolvmentBy(usersController.getLoggedInUser());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentTime(new Date());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentType("Status/Assignment Change");
+            troubleTicketInvolvmentController.getSelected().setPreviousGroup(selectedTT.getTtAssignmentGroup());
+            troubleTicketInvolvmentController.getSelected().setCurrentGroup(selectedTTEdit_AssignmentGroup);
+            
+            selectedTT.setTtAssignmentGroup(selectedTTEdit_AssignmentGroup);
+            selectedTT.setTtStatus(selectedTTEdit_Status);
+            
+            if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
+            selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }else{
+                selectedTT.setTroubleTicketInvolvmentCollection(new ArrayList<TroubleTicketInvolvment>());
+                selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }
+              updateEdit();
+      }
+    }
+    
+    public void startWorking(){
+        if(selectedTT!=null){
+            troubleTicketInvolvmentController.prepareCreate();
+            troubleTicketInvolvmentController.getSelected().setTtId(selectedTT);
+            troubleTicketInvolvmentController.getSelected().setInvolvmentBy(usersController.getLoggedInUser());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentTime(new Date());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentType("Status/Assignment Change");
+            troubleTicketInvolvmentController.getSelected().setPreviousGroup(selectedTT.getTtAssignmentGroup());
+            troubleTicketInvolvmentController.getSelected().setCurrentGroup(selectedTT.getTtAssignmentGroup());
+            
+            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Under Invistigation"));
+            
+            if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
+            selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }else{
+                selectedTT.setTroubleTicketInvolvmentCollection(new ArrayList<TroubleTicketInvolvment>());
+                selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }
+              updateEdit();
+      }
+    }
+    
+    public void reopen(){
+        if(selectedTT!=null){
+            troubleTicketInvolvmentController.prepareCreate();
+            troubleTicketInvolvmentController.getSelected().setTtId(selectedTT);
+            troubleTicketInvolvmentController.getSelected().setInvolvmentBy(usersController.getLoggedInUser());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentTime(new Date());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentType("Status/Assignment Change");
+            troubleTicketInvolvmentController.getSelected().setPreviousGroup(selectedTT.getTtAssignmentGroup());
+            troubleTicketInvolvmentController.getSelected().setCurrentGroup(selectedTTEdit_AssignmentGroup);
+            
+            troubleTicketLogController.prepareCreate();
+            troubleTicketLogController.getSelected().setCommentBy(usersController.getLoggedInUser());
+            troubleTicketLogController.getSelected().setCommentText(selectedTTEdit_reopenComment);
+            troubleTicketLogController.getSelected().setTtId(selectedTT);
+            troubleTicketLogController.getSelected().setCommentTime(new Date());
+        
+            if(selectedTT.getTroubleTicketLogCollection()!=null){
+                 selectedTT.getTroubleTicketLogCollection().add(troubleTicketLogController.create());
+             }else{
+                 selectedTT.setTroubleTicketLogCollection(new ArrayList<TroubleTicketLog>());
+                 selectedTT.getTroubleTicketLogCollection().add(troubleTicketLogController.create());
+             } 
+            
+            selectedTT.setTtAssignmentGroup(selectedTTEdit_AssignmentGroup);
+            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Assigned"));
+            
+            if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
+            selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }else{
+                selectedTT.setTroubleTicketInvolvmentCollection(new ArrayList<TroubleTicketInvolvment>());
+                selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }
+              updateEdit();
+      }
+    }
+
+    public List<TroubleTickets> getSearchResult() {
+        return searchResult;
+    }
+
+    public void setSearchResult(List<TroubleTickets> searchResult) {
+        this.searchResult = searchResult;
+    }
+    
+    public void searchTT(){
+        String query = " select * from trouble_tickets ";
+        boolean where_added=false;
+        if(searchAbleTT.getTtId()!=null){
+            query += " where  tt_id = "+searchAbleTT.getTtId()+" ";
+            where_added=true;
+        }
+        if(searchAbleTT.getTtTitle()!=null){
+            if(where_added){
+            query += " and tt_title like '%"+searchAbleTT.getTtTitle()+"%'";
+            }else{
+            query += " where  tt_title like '%"+searchAbleTT.getTtTitle()+"%'";
+            where_added=true;
+            }
+        }
+        if(searchAbleTT.getTtDescription()!=null){
+            if(where_added){
+            query += " and tt_description like '%"+searchAbleTT.getTtDescription()+"%'";
+            }else{
+            query += " where  tt_description like '%"+searchAbleTT.getTtDescription()+"%'";
+            where_added=true;
+            }
+        }
+        if(searchAbleTT.getTtDomain()!=null){
+            if(where_added){
+            query += " and tt_domain = '"+searchAbleTT.getTtDomain().getDomainName()+"'";
+            }else{
+            query += " where  tt_domain = '"+searchAbleTT.getTtDomain().getDomainName()+"'";
+            where_added=true;
+            }
+        }
+        if(searchAbleTT.getTtCategory()!=null){
+            if(where_added){
+            query += " and tt_category = '"+searchAbleTT.getTtCategory().getCategoryName()+"'";
+            }else{
+            query += " where  tt_category = '"+searchAbleTT.getTtCategory().getCategoryName()+"'";
+            where_added=true;
+            }
+        }
+        if(searchAbleTT.getTtSubcategory()!=null){
+            if(where_added){
+            query += " and tt_subcategory = '"+searchAbleTT.getTtSubcategory()+"'";
+            }else{
+            query += " where  tt_subcategory = '"+searchAbleTT.getTtSubcategory()+"'";
+            where_added=true;
+            }
+        }
+        if(searchAbleTT.getTtStatus()!=null){
+            if(where_added){
+            query += " and tt_status = '"+searchAbleTT.getTtStatus().getStatusName()+"'";
+            }else{
+            query += " where  tt_status = '"+searchAbleTT.getTtStatus().getStatusName()+"'";
+            where_added=true;
+            }
+        }
+        if(searchAbleTT.getTtPriority()!=null){
+            if(where_added){
+            query += " and tt_priority = '"+searchAbleTT.getTtPriority().getPriorityName()+"'";
+            }else{
+            query += " where  tt_priority = '"+searchAbleTT.getTtPriority().getPriorityName()+"'";
+            where_added=true;
+            }
+        }
+        if(searchAbleTT.getTtAssignmentGroup()!=null){
+            if(where_added){
+            query += " and tt_assignment_group = '"+searchAbleTT.getTtAssignmentGroup().getGroupName()+"'";
+            }else{
+            query += " where  tt_assignment_group = '"+searchAbleTT.getTtAssignmentGroup().getGroupName()+"'";
+            where_added=true;
+            }
+        }
+        if(searchFrom!=null){
+            if(where_added){
+            query += " and tt_creation_date >= '"+sdf.format(searchFrom)+"' ";
+            }else{
+            query += " where  tt_creation_date >= '"+sdf.format(searchFrom)+"'";
+            where_added=true;
+            }
+        }
+        if(searchTo!=null){
+            if(where_added){
+            query += " and tt_creation_date <= '"+sdf.format(searchTo)+"' ";
+            }else{
+            query += " where  tt_creation_date <= '"+sdf.format(searchTo)+"'";
+            where_added=true;
+            }
+        }
+        System.out.println(query);
+        
+        searchResult = getFacade().executeSearch(query);
+    }
+    
 }

@@ -28,5 +28,9 @@ public class UsersFacade extends AbstractFacade<Users> {
     public UsersFacade() {
         super(Users.class);
     }
+
+    public Users merge(Users selected) {
+        return em.merge(selected);
+    }
     
 }

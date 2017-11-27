@@ -1,13 +1,12 @@
 package com.te.tt.controllers;
 
-import com.te.tt.entities.AssignmentGroups;
+
+
+import com.te.tt.beans.UserRolesFacade;
 import com.te.tt.controllers.util.JsfUtil;
 import com.te.tt.controllers.util.JsfUtil.PersistAction;
-import com.te.tt.beans.AssignmentGroupsFacade;
-import com.te.tt.entities.Users;
-
+import com.te.tt.entities.UserRoles;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -21,36 +20,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("assignmentGroupsController")
+@Named("userRolesController")
 @SessionScoped
-public class AssignmentGroupsController implements Serializable {
+public class UserRolesController implements Serializable {
 
     @EJB
-    private com.te.tt.beans.AssignmentGroupsFacade ejbFacade;
-    private List<AssignmentGroups> items = null;
-    private AssignmentGroups selected;
-    
-    private Users searchedUser;
+    private UserRolesFacade ejbFacade;
+    private List<UserRoles> items = null;
+    private UserRoles selected;
 
-    public Users getSearchedUser() {
-        return searchedUser;
+    public UserRolesController() {
     }
 
-    public void setSearchedUser(Users searchedUser) {
-        this.searchedUser = searchedUser;
-    }
-    
-    
-    
-
-    public AssignmentGroupsController() {
-    }
-
-    public AssignmentGroups getSelected() {
+    public UserRoles getSelected() {
         return selected;
     }
 
-    public void setSelected(AssignmentGroups selected) {
+    public void setSelected(UserRoles selected) {
         this.selected = selected;
     }
 
@@ -60,36 +46,36 @@ public class AssignmentGroupsController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private AssignmentGroupsFacade getFacade() {
+    private UserRolesFacade getFacade() {
         return ejbFacade;
     }
 
-    public AssignmentGroups prepareCreate() {
-        selected = new AssignmentGroups();
+    public UserRoles prepareCreate() {
+        selected = new UserRoles();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("AssignmentGroupsCreated"));
+        persist(PersistAction.CREATE, "UserRolesCreated");
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("AssignmentGroupsUpdated"));
+        persist(PersistAction.UPDATE,"UserRolesUpdated");
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("AssignmentGroupsDeleted"));
+        persist(PersistAction.DELETE, "UserRolesDeleted");
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<AssignmentGroups> getItems() {
+    public List<UserRoles> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -124,29 +110,29 @@ public class AssignmentGroupsController implements Serializable {
         }
     }
 
-    public AssignmentGroups getAssignmentGroups(java.lang.String id) {
+    public UserRoles getUserRoles(java.lang.String id) {
         return getFacade().find(id);
     }
 
-    public List<AssignmentGroups> getItemsAvailableSelectMany() {
+    public List<UserRoles> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<AssignmentGroups> getItemsAvailableSelectOne() {
+    public List<UserRoles> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = AssignmentGroups.class)
-    public static class AssignmentGroupsControllerConverter implements Converter {
+    @FacesConverter(forClass = UserRoles.class)
+    public static class UserRolesControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            AssignmentGroupsController controller = (AssignmentGroupsController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "assignmentGroupsController");
-            return controller.getAssignmentGroups(getKey(value));
+            UserRolesController controller = (UserRolesController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "userRolesController");
+            return controller.getUserRoles(getKey(value));
         }
 
         java.lang.String getKey(String value) {
@@ -166,36 +152,15 @@ public class AssignmentGroupsController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof AssignmentGroups) {
-                AssignmentGroups o = (AssignmentGroups) object;
-                return getStringKey(o.getGroupName());
+            if (object instanceof UserRoles) {
+                UserRoles o = (UserRoles) object;
+                return getStringKey(o.getRoleName());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), AssignmentGroups.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), UserRoles.class.getName()});
                 return null;
             }
         }
 
     }
 
-    public void onUserAdd(){
-        if(selected!=null && searchedUser!=null){
-            if(selected.getUsersCollection()!=null){
-                selected.getUsersCollection().add(searchedUser);
-            }else{
-                selected.setUsersCollection(new ArrayList<Users>());
-                selected.getUsersCollection().add(searchedUser);
-            }
-            
-            update();
-            searchedUser = null;
-        }
-    }
-    
-    public void removeUser(){
-        if(selected!=null){
-            selected.getUsersCollection().remove(searchedUser);
-            update();
-            searchedUser = null;
-        }
-    }
 }

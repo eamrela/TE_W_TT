@@ -7,24 +7,55 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition>
         
-        <p:dialog id="resolveDlgId" modal="true" widgetVar="resolveDlg" closeOnEscape="true" resizable="false" height="160" width="600" appendTo="@(body)" header="Resolve TT">
+        <p:dialog id="resolveDlgId" modal="true" widgetVar="resolveDlg" closeOnEscape="true" resizable="false" height="260" width="600" appendTo="@(body)" header="Resolve TT">
             <h:form id="resolveForm">
 
                 <h:panelGroup rendered="#{troubleTicketsController.selectedTT!=null}">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <h:inputTextarea class="form-control" 
+                            <label class="control-label" for="resolutionAction">Resolution Action:</label>
+                            <h:inputTextarea id="resolutionAction"
+                                             class="form-control" 
                                              value="#{troubleTicketsController.selectedTTEdit_resolutionAction}"
                                              rows="3"/>
                         </div>
                         </div>
-                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                            <label class="control-label" for="returnToInitiatorCB">Return to initiator:</label>
+                            <h:selectBooleanCheckbox id="returnToInitiatorCB"
+                                                     styleClass="checkbox-custom" 
+                                                     value="#{troubleTicketsController.selectedTTEdit_returnToInititaor}">
+                                <p:ajax listener="#{troubleTicketsController.setAssignmentToInititaor}" update="assignentPerson"/>
+                            </h:selectBooleanCheckbox>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label class="control-label" for="assignentPerson">Assignment Group:</label>
+                                <h:selectOneMenu id="assignentPerson"
+                                                 value="#{troubleTicketsController.selectedTTEdit_AssignmentGroup}"
+                                                styleClass="form-control"
+                                                required="true"
+                                                requiredMessage="Assignement can't be empty"
+                                                disabled="#{troubleTicketsController.selectedTTEdit_returnToInititaor}"
+                                                >
+                               <f:selectItem itemLabel="" itemValue="#{null}"/>
+                               <f:selectItems value="#{assignmentGroupsController.itemsAvailableSelectOne}" 
+                                               var="assignmentItem"
+                                               itemValue="#{assignmentItem}"
+                                               itemLabel="#{assignmentItem.groupName}"/>
+                               </h:selectOneMenu>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <p:commandButton class="btn btn-block btn-success" actionListener="#{troubleTicketsController.updateResolve}" value="Resolve"
-                                             update=":incidentQueueForm:userTTs,:incidentQueueForm:growl" 
+                                             update=":incidentQueueForm:userTTs,:incidentQueueForm:growl, :incidentQueueForm:selectedTTPnlGrp" 
                                              oncomplete="handleSubmit(args, 'resolveDlg');"/>
                           
                         </div>

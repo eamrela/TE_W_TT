@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       class="no-js css-menubar"
-      xmlns:WE_TT="http://xmlns.jcp.org/jsf/composite/components">
+      xmlns:WE_TT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -36,7 +38,20 @@
     
     <script src="#{resource['app/global/vendor/modernizr/modernizr.min.js']}"></script>
     <script src="#{resource['app/global/vendor/breakpoints/breakpoints.min.js']}"></script>
-
+    <style>
+        .ui-growl{top: 120px;}
+        .tabColor {
+            background: white;
+        }
+    </style>
+    <f:metadata>
+        <f:viewAction action="#{troubleTicketsController.prepareSearch}"/>
+    </f:metadata>
+    <script>
+       //<![CDATA[
+    Breakpoints();
+     //]]>
+  </script>
     </h:head>
     <h:body>
     <WE_TT:TopBar/>
@@ -44,8 +59,205 @@
     <!-- Page -->
     <div class="page animsition">
     <div class="page-content">
-      <h2>Blank</h2>
-      <p>Page content goes here</p>
+        <h:form id="searchTTForm">
+            <div class="row">
+                <div class="col-xlg-12 col-md-12">
+            <p:accordionPanel id="accordion">
+                <p:tab title="Search Trouble Tickets" id="searchTTTab" titleStyleClass="tabColor">
+                    <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">TT#:</label>
+                                    <h:inputText value="#{troubleTicketsController.searchAbleTT.ttId}"
+                                                 class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Title (Contains):</label>
+                                    <h:inputText value="#{troubleTicketsController.searchAbleTT.ttTitle}"
+                                                 class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Description (Contains):</label>
+                                    <h:inputText value="#{troubleTicketsController.searchAbleTT.ttDescription}"
+                                                 class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Domain:</label>
+                                     <h:selectOneMenu id="imDomain"
+                                             value="#{troubleTicketsController.searchAbleTT.ttDomain}"
+                                             styleClass="form-control">
+                                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                        <f:selectItems value="#{domainsController.itemsAvailableSelectOne}" 
+                                                       var="domainItem"
+                                                       itemValue="#{domainItem}"
+                                                       itemLabel="#{domainItem.domainName}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Category:</label>
+                                     <h:selectOneMenu id="imCategory"
+                                                    value="#{troubleTicketsController.searchAbleTT.ttCategory}"
+                                             styleClass="form-control">
+                                        <p:ajax update="imSubCategory" />
+                                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                        <f:selectItems value="#{categoriesController.itemsAvailableSelectOne}" 
+                                                       var="catergoryItem"
+                                                       itemValue="#{catergoryItem}"
+                                                       itemLabel="#{catergoryItem.categoryName}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Sub-Category (select Category first):</label>
+                                     <h:selectOneMenu id="imSubCategory"
+                                             value="#{troubleTicketsController.searchAbleTT.ttSubcategory}"
+                                             styleClass="form-control"
+                                             disabled="#{troubleTicketsController.searchAbleTT.ttCategory==null}">
+                                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                        <f:selectItems value="#{troubleTicketsController.searchAbleTT.ttCategory.subCategoriesCollection}" 
+                                                       var="subcatergoryItem"
+                                                       itemValue="#{subcatergoryItem.subCategoriesPK.subCategoryName}"
+                                                       itemLabel="#{subcatergoryItem.subCategoriesPK.subCategoryName}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Status:</label>
+                                     <h:selectOneMenu id="imStatus"
+                                                      value="#{troubleTicketsController.searchAbleTT.ttStatus}"
+                                             styleClass="form-control">
+                                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                        <f:selectItems value="#{troubleTicketStatusController.itemsAvailableSelectOne}" 
+                                                       var="statusItem"
+                                                       itemValue="#{statusItem}"
+                                                       itemLabel="#{statusItem}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Priority:</label>
+                                     <h:selectOneMenu id="imPriority"
+                                             value="#{troubleTicketsController.searchAbleTT.ttPriority}"
+                                             styleClass="form-control">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{troubleTicketPriorityController.itemsAvailableSelectOne}" 
+                                               var="priorityItem"
+                                               itemValue="#{priorityItem}"
+                                               itemLabel="#{priorityItem.priorityName}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Assignment Group:</label>
+                                    <h:selectOneMenu id="imAssignment"
+                                             value="#{troubleTicketsController.searchAbleTT.ttAssignmentGroup}"
+                                             styleClass="form-control"
+                                             class="form-control">
+                                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                        <f:selectItems value="#{assignmentGroupsController.itemsAvailableSelectOne}" 
+                                                       var="assignmentItem"
+                                                       itemValue="#{assignmentItem}"
+                                                       itemLabel="#{assignmentItem.groupName}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="row">
+                            <div class="col-sm-6">
+                                <label class="control-label">From:</label>
+                                <p:calendar id="searchFrom" 
+                                            value="#{troubleTicketsController.searchFrom}"
+                                            styleClass="form-control"/>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">To:</label>
+                                <p:calendar id="searchTo" 
+                                            value="#{troubleTicketsController.searchTo}"
+                                            styleClass="form-control"/>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <br></br>
+                        <div class="col-sm-12">
+                        <h:commandLink id="searchBtn" 
+                                     value="Search"
+                                     class="btn btn-block btn-success waves-effect waves-light"
+                                     action="#{troubleTicketsController.searchTT}"
+                                     />
+                        </div>
+                    </div>
+                </p:tab>
+                <p:tab title="Search Results" titleStyleClass="tabColor">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p:dataTable var="searchTTResult" 
+                                         value="#{troubleTicketsController.searchResult}"
+                                         paginator="true"
+                                         paginatorPosition="bottom">
+                                <p:column headerText="Id" style="font-size: 9px;" 
+                                      filterBy="#{searchTTResult.ttId}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttId}" />
+                            </p:column>
+                            <p:column headerText="Title" style="font-size: 9px;"
+                                      filterBy="#{searchTTResult.ttTitle}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttTitle}" />
+                            </p:column>
+                            <p:column headerText="Domain" style="font-size: 9px;"
+                                      filterBy="#{searchTTResult.ttDomain.domainName}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttDomain.domainName}" />
+                            </p:column>
+                            <p:column headerText="Priority" style="font-size: 9px;"
+                                      filterBy="#{searchTTResult.ttPriority.priorityName}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttPriority.priorityName}" />
+                            </p:column>
+                            <p:column headerText="Category" style="font-size: 9px;"
+                                      filterBy="#{searchTTResult.ttCategory.categoryName}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttCategory.categoryName}" />
+                            </p:column>
+                            <p:column headerText="SubCategory" style="font-size: 9px;"
+                                      filterBy="#{searchTTResult.ttSubcategory}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttSubcategory}" />
+                            </p:column>
+                            <p:column headerText="Status" style="font-size: 9px;"
+                                      filterBy="#{searchTTResult.ttStatus.statusName}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttStatus.statusName}" />
+                            </p:column>
+                            <p:column headerText="Assignment" style="font-size: 9px;"
+                                      filterBy="#{searchTTResult.ttAssignmentGroup.groupName}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttAssignmentGroup.groupName}" />
+                            </p:column>
+                            <p:column headerText="Creation Date" style="font-size: 9px;"
+                                      sortBy="#{searchTTResult.ttCreationDate}" filterMatchMode="contains">
+                                <h:outputText value="#{searchTTResult.ttCreationDate}">
+                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
+                                </h:outputText>
+                            </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </p:tab>
+            </p:accordionPanel>
+            </div>
+            </div>
+                
+                
+        </h:form>
     </div>
     </div>
     <!-- End Page -->
@@ -79,7 +291,6 @@
 
     <script>
        //<![CDATA[
-    Breakpoints();
     (function(document, window, $) {
       'use strict';
 
@@ -88,7 +299,23 @@
         Site.run();
       });
     })(document, window, jQuery);
+    
+    removeClasses();
      //]]>
+     function removeClasses(){
+             $('#searchTTForm\\:accordion\\:searchFrom')
+                    .removeClass();
+             $('#searchTTForm\\:accordion\\:searchFrom_input')
+                    .removeClass()
+                    .addClass( "form-control" );
+            
+            $('#searchTTForm\\:accordion\\:searchTo')
+                    .removeClass();
+            $('#searchTTForm\\:accordion\\:searchTo_input') 
+                    .removeClass()
+                    .addClass( "form-control" );
+         
+        }
   </script>
     </h:body>
 </html>

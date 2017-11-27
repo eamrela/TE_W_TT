@@ -78,31 +78,40 @@
                                     update=":incidentQueueForm:selectedTTPnlGrp,
                                             :incidentQueueForm:menuItems" />
                             
-                            <p:column headerText="Id" style="font-size: 9px;">
+                            <p:column headerText="Id" style="font-size: 9px;" 
+                                      filterBy="#{tt.ttId}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttId}" />
                             </p:column>
-                            <p:column headerText="Title" style="font-size: 9px;">
+                            <p:column headerText="Title" style="font-size: 9px;"
+                                      filterBy="#{tt.ttTitle}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttTitle}" />
                             </p:column>
-                            <p:column headerText="Domain" style="font-size: 9px;">
+                            <p:column headerText="Domain" style="font-size: 9px;"
+                                      filterBy="#{tt.ttDomain.domainName}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttDomain.domainName}" />
                             </p:column>
-                            <p:column headerText="Priority" style="font-size: 9px;">
+                            <p:column headerText="Priority" style="font-size: 9px;"
+                                      filterBy="#{tt.ttPriority.priorityName}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttPriority.priorityName}" />
                             </p:column>
-                            <p:column headerText="Category" style="font-size: 9px;">
+                            <p:column headerText="Category" style="font-size: 9px;"
+                                      filterBy="#{tt.ttCategory.categoryName}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttCategory.categoryName}" />
                             </p:column>
-                            <p:column headerText="SubCategory" style="font-size: 9px;">
+                            <p:column headerText="SubCategory" style="font-size: 9px;"
+                                      filterBy="#{tt.ttSubcategory}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttSubcategory}" />
                             </p:column>
-                            <p:column headerText="Status" style="font-size: 9px;">
+                            <p:column headerText="Status" style="font-size: 9px;"
+                                      filterBy="#{tt.ttStatus.statusName}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttStatus.statusName}" />
                             </p:column>
-                            <p:column headerText="Assignment" style="font-size: 9px;">
+                            <p:column headerText="Assignment" style="font-size: 9px;"
+                                      filterBy="#{tt.ttAssignmentGroup.groupName}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttAssignmentGroup.groupName}" />
                             </p:column>
-                            <p:column headerText="Creation Date" style="font-size: 9px;">
+                            <p:column headerText="Creation Date" style="font-size: 9px;"
+                                      sortBy="#{tt.ttCreationDate}" filterMatchMode="contains">
                                 <h:outputText value="#{tt.ttCreationDate}">
                                     <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
                                 </h:outputText>
@@ -113,17 +122,31 @@
                                         icon="ui-icon-pencil" 
                                         actionListener="#{troubleTicketsController.prepareEdit}"
                                         oncomplete="PF('reassignDlg').show();"
-                                        update="userTTs,:reassignForm" />
+                                        update="userTTs,:reassignForm" 
+                                        disabled="#{troubleTicketsController.contextMenuReassignDisabled}"/>
                              <p:menuitem value="Resolve" 
                                         icon="ui-icon-pencil" 
                                         actionListener="#{troubleTicketsController.prepareEdit}"
                                         oncomplete="PF('resolveDlg').show();"
-                                        update="userTTs,:resolveForm" />
-                             <p:menuitem value="Chnage Status/Assign" 
+                                        update="userTTs,:resolveForm"
+                                        disabled="#{troubleTicketsController.contextMenuResolveDisabled}"/>
+                             <p:menuitem value="Change Status/Assign" 
                                         icon="ui-icon-pencil" 
                                         actionListener="#{troubleTicketsController.prepareEdit}"
                                         oncomplete="PF('changeStatusDlg').show();"
-                                        update="userTTs,:changeStatusForm" />
+                                        update="userTTs,:changeStatusForm" 
+                                        disabled="#{troubleTicketsController.contextMenuChangeStatusDisabled}"/>
+                             <p:menuitem value="Start working" 
+                                        icon="ui-icon-pencil" 
+                                        actionListener="#{troubleTicketsController.startWorking}"
+                                        update="userTTs,:changeStatusForm" 
+                                        disabled="#{troubleTicketsController.contextMenuStartWorkingDisabled}"/>
+                             <p:menuitem value="Re-open" 
+                                        icon="ui-icon-pencil" 
+                                        actionListener="#{troubleTicketsController.prepareEdit}"
+                                        oncomplete="PF('reopenDlg').show();"
+                                        update="userTTs,:reopenForm" 
+                                        disabled="#{troubleTicketsController.contextMenuReopenDisabled}"/>
                         </p:contextMenu>
                     </div>
                 </div>
@@ -169,11 +192,23 @@
                                       Journal Updates
                                   </a>
                               </li>
-                                <li role="presentation">
+                              <li role="presentation">
                                   <a data-toggle="tab" href="#attachmentsTab" aria-controls="exampleTabsLeftThree" role="tab">
                                       Attachments
                                   </a>
                               </li>
+                              <li role="presentation">
+                                  <a data-toggle="tab" href="#involvmentsTab" aria-controls="exampleTabsLeftFive" role="tab">
+                                      Involvements
+                                  </a>
+                              </li>
+                            <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Cleared' or troubleTicketsController.selectedTT.ttStatus == 'Closed'}">
+                              <li role="presentation">
+                                  <a data-toggle="tab" href="#resolutionTab" aria-controls="exampleTabsLeftFive" role="tab">
+                                      Resolution Action
+                                  </a>
+                              </li>
+                            </h:panelGroup>
                             </ul>
                             <div class="tab-content padding-vertical-15">
                               <div class="tab-pane active" id="categorizationTab" role="tabpanel">
@@ -262,7 +297,7 @@
                                     </p:dataTable>
                                     </div>
                                     </div>
-                              </div>
+                            </div>
                               <div class="tab-pane" id="journalUpdatesTab" role="tabpanel">
                                   <div class="row">
                                     <div class="col-sm-12">
@@ -301,6 +336,48 @@
                                     </div>
                                   </div>
                               </div>
+                              <div class="tab-pane" id="involvmentsTab" role="tabpanel">
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="control-label" for="involvments">TT Involvements</label>
+                                        <p:dataTable id="involvments"
+                                                     var="involvment"
+                                                     value="#{troubleTicketsController.selectedTT.troubleTicketInvolvmentCollection}"
+                                                     paginator="true"
+                                                     paginatorPosition="bottom"
+                                                     >
+                                            <p:column headerText="Involvment By" style="font-size: 9px;">
+                                                <h:outputText value="#{involvment.involvmentBy.fullName}" />
+                                            </p:column>
+                                            <p:column headerText="Involvment Type" style="font-size: 9px;">
+                                                <h:outputText value="#{involvment.involvmentType}" />
+                                            </p:column>
+                                            <p:column headerText="Time" style="font-size: 9px;">
+                                                <h:outputText value="#{involvment.involvmentTime}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd HH:mm:ss"/>
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                  </div>
+                              </div>
+                              <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Cleared' or troubleTicketsController.selectedTT.ttStatus == 'Closed'}">
+                              <div class="tab-pane" id="resolutionTab" role="tabpanel">
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="control-label" for="resolvedBy">Resolved By</label>
+                                        <h:outputText id="resolvedBy" class="form-control" 
+                                                      value="#{troubleTicketsController.selectedTT.resolvedBy.fullName}"
+                                              style="height: 100%;"/>
+                                        <label class="control-label" for="resolution">Resolution Action</label>
+                                        <h:outputText id="resolution" class="form-control" 
+                                                      value="#{troubleTicketsController.selectedTT.resolutionAction}"
+                                              style="height: 100%;"/>
+                                        
+                                    </div>
+                                  </div>
+                              </div>
+                                </h:panelGroup>
                             </div>
                           </div>
                         </div>
@@ -319,6 +396,7 @@
     <ui:include src="modals/reassign.xhtml"/>   
     <ui:include src="modals/resolve.xhtml"/> 
     <ui:include src="modals/status.xhtml"/> 
+    <ui:include src="modals/reopen.xhtml"/> 
     <!-- End Page -->
     <WE_TT:Footer/>
   
