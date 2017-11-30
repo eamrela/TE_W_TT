@@ -116,6 +116,12 @@
                                     <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
                                 </h:outputText>
                             </p:column>
+                            <f:facet name="footer">
+                                        <h:commandLink>
+                                            <img src="csv.png"/>
+                                           <p:dataExporter type="csv" target="userTTs" fileName="TT_Queue" />
+                                       </h:commandLink>
+                            </f:facet>
                         </p:dataTable>
                         <p:contextMenu id="menuItems" for="userTTs">
                             <p:menuitem value="Reassign" 
@@ -147,6 +153,18 @@
                                         oncomplete="PF('reopenDlg').show();"
                                         update="userTTs,:reopenForm" 
                                         disabled="#{troubleTicketsController.contextMenuReopenDisabled}"/>
+                             <p:menuitem value="Close" 
+                                        icon="ui-icon-pencil" 
+                                        actionListener="#{troubleTicketsController.prepareEdit}"
+                                        oncomplete="PF('closeDlg').show();"
+                                        update="userTTs,:closeForm" 
+                                        disabled="#{troubleTicketsController.contextMenuCloseDisabled}"/>
+                             <p:menuitem value="Reject" 
+                                        icon="ui-icon-pencil" 
+                                        actionListener="#{troubleTicketsController.prepareEdit}"
+                                        oncomplete="PF('rejectDlg').show();"
+                                        update="userTTs,:rejectForm" 
+                                        disabled="#{troubleTicketsController.contextMenuRejectDisabled}"/>
                         </p:contextMenu>
                     </div>
                 </div>
@@ -172,7 +190,32 @@
                                               value="#{troubleTicketsController.selectedTT.ttDescription}"
                                               style="height: 100%;"/>
                             </div>
-                        </div> 
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                 <label class="control-label" for="imExternalTT">External TT#</label>
+                                 <h:outputText id="imExternalTT"
+                                      class="form-control" 
+                                      value="#{troubleTicketsController.selectedTT.externalTtId}"/>
+                                 
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label" for="imEventTime">Event Time</label>
+                                <h:outputText value="#{troubleTicketsController.selectedTT.eventTime}" class="form-control">
+                                    <f:convertDateTime parent="yyyy-MM-dd HH:mm:ss"/>
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                 <label class="control-label" for="imMajorIncident">Major Incident</label>
+                                 <h:outputText value="#{troubleTicketsController.selectedTT.majorIncident}" class="form-control"/>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label" for="imArea">Area</label>
+                                <h:outputText value="#{troubleTicketsController.selectedTT.area}" class="form-control"/>
+                            </div>
+                        </div>
                         <hr></hr>
                         <div class="form-group row">
                             <div class="nav-tabs-vertical">
@@ -202,10 +245,17 @@
                                       Involvements
                                   </a>
                               </li>
-                            <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Cleared' or troubleTicketsController.selectedTT.ttStatus == 'Closed'}">
+                            <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Resolved' or troubleTicketsController.selectedTT.ttStatus == 'Closed'}">
                               <li role="presentation">
                                   <a data-toggle="tab" href="#resolutionTab" aria-controls="exampleTabsLeftFive" role="tab">
                                       Resolution Action
+                                  </a>
+                              </li>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Rejected'}">
+                              <li role="presentation">
+                                  <a data-toggle="tab" href="#rejectionTab" aria-controls="exampleTabsLeftSix" role="tab">
+                                      Rejection
                                   </a>
                               </li>
                             </h:panelGroup>
@@ -361,7 +411,7 @@
                                     </div>
                                   </div>
                               </div>
-                              <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Cleared' or troubleTicketsController.selectedTT.ttStatus == 'Closed'}">
+                              <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Resolved' or troubleTicketsController.selectedTT.ttStatus == 'Closed'}">
                               <div class="tab-pane" id="resolutionTab" role="tabpanel">
                                   <div class="row">
                                     <div class="col-sm-12">
@@ -372,6 +422,23 @@
                                         <label class="control-label" for="resolution">Resolution Action</label>
                                         <h:outputText id="resolution" class="form-control" 
                                                       value="#{troubleTicketsController.selectedTT.resolutionAction}"
+                                              style="height: 100%;"/>
+                                        
+                                    </div>
+                                  </div>
+                              </div>
+                                </h:panelGroup>
+                              <h:panelGroup rendered="#{troubleTicketsController.selectedTT.ttStatus == 'Rejected'}">
+                              <div class="tab-pane" id="rejectionTab" role="tabpanel">
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="control-label" for="rejectedBy">Rejected By</label>
+                                        <h:outputText id="rejectedBy" class="form-control" 
+                                                      value="#{troubleTicketsController.selectedTT.rejectedBy.fullName}"
+                                              style="height: 100%;"/>
+                                        <label class="control-label" for="rejectionReason">Rejection Reason</label>
+                                        <h:outputText id="rejectionReason" class="form-control" 
+                                                      value="#{troubleTicketsController.selectedTT.rejectionReason}"
                                               style="height: 100%;"/>
                                         
                                     </div>
@@ -397,6 +464,8 @@
     <ui:include src="modals/resolve.xhtml"/> 
     <ui:include src="modals/status.xhtml"/> 
     <ui:include src="modals/reopen.xhtml"/> 
+    <ui:include src="modals/close.xhtml"/> 
+    <ui:include src="modals/reject.xhtml"/> 
     <!-- End Page -->
     <WE_TT:Footer/>
   

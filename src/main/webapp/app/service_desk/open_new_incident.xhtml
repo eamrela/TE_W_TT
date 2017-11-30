@@ -88,6 +88,45 @@
                                       value="#{troubleTicketsController.selected.ttDescription}"/>
                         </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                 <label class="control-label" for="imExternalTT">External TT#</label>
+                                 <h:inputText id="imExternalTT"
+                                      class="form-control" 
+                                      value="#{troubleTicketsController.selected.externalTtId}"/>
+                                 
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label" for="imEventTime">Event Time</label>
+                                <p:calendar id="imEventTime" 
+                                            value="#{troubleTicketsController.selected.eventTime}"
+                                            pattern="MM/dd/yyyy HH:mm:ss"
+                                            />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                 <label class="control-label" for="imMajorIncident">Major Incident</label>
+                                 <h:selectOneMenu id="imMajorIncident"
+                                                  value="#{troubleTicketsController.selected.majorIncident}"
+                                             styleClass="form-control">
+                                <f:selectItem itemLabel="No" itemValue="#{false}"/>
+                                <f:selectItem itemLabel="Yes" itemValue="#{true}"/>
+                            </h:selectOneMenu>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label" for="imArea">Area</label>
+                            <h:selectOneMenu id="imArea"
+                                                 value="#{troubleTicketsController.selected.area}"
+                                             styleClass="form-control">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{areasController.itemsAvailableSelectOne}" 
+                                               var="areaItem"
+                                               itemValue="#{areaItem}"
+                                               itemLabel="#{areaItem.areaName}"/>
+                            </h:selectOneMenu>
+                            </div>
+                        </div>
                     </div>
                   </div>
             </div>
@@ -366,11 +405,11 @@
                     .removeClass()
                     .addClass( "form-control" );
             
-//        $('#openNewIncidentForm\\searchNode')
-//                    .removeClass();
-//         $('#openNewIncidentForm\\:searchNode_input') 
-//                    .removeClass()
-//                    .addClass( "form-control" );
+        $('#openNewIncidentForm\\imEventTime')
+                    .removeClass();
+         $('#openNewIncidentForm\\:imEventTime_input') 
+                    .removeClass()
+                    .addClass( "form-control" );
      }
   </script>
     </h:body>

@@ -109,6 +109,10 @@
                                                          value="#{bundle.Create}" actionListener="#{usersController.prepareCreate}" update=":addUserForm" oncomplete="PF('addUserDlg').show()"/>
                                         <p:commandButton id="resetPasswordBtn" icon="ui-icon-pencil"   
                                                          value="Reset Password" update=":updatePasswordForm" oncomplete="PF('updatePasswordDlg').show()"/>
+                                        <h:commandLink>
+                                            <img src="csv.png"/>
+                                           <p:dataExporter type="csv" target="usersTbl" fileName="Users" />
+                                       </h:commandLink>
                                     </f:facet>
                                 </p:dataTable>
                             </div>

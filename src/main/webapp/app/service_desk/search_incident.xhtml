@@ -206,7 +206,8 @@
                 <p:tab title="Search Results" titleStyleClass="tabColor">
                     <div class="row">
                         <div class="col-md-12">
-                            <p:dataTable var="searchTTResult" 
+                            <p:dataTable id="searchResultTbl"
+                                         var="searchTTResult" 
                                          value="#{troubleTicketsController.searchResult}"
                                          paginator="true"
                                          paginatorPosition="bottom">
@@ -248,6 +249,12 @@
                                     <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
                                 </h:outputText>
                             </p:column>
+                                <f:facet name="footer">
+                                        <h:commandLink>
+                                            <img src="csv.png"/>
+                                           <p:dataExporter type="csv" target="searchResultTbl" fileName="TT_Search_Result" />
+                                       </h:commandLink>
+                            </f:facet>
                             </p:dataTable>
                         </div>
                     </div>

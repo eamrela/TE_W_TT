@@ -107,6 +107,10 @@
                                      <f:facet name="footer">
                                         <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{nodesController.prepareCreate}" update=":addNodeForm" oncomplete="PF('addNodeDlg').show()"/>
                                         <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":editNodeForm" oncomplete="PF('editNodeDlg').show()" disabled="#{empty nodesController.selected}"/>
+                                        <h:commandLink>
+                                            <img src="csv.png"/>
+                                           <p:dataExporter type="csv" target="nodesTbl" fileName="NetworkNodes" />
+                                       </h:commandLink>
                                     </f:facet>
                                 </p:dataTable>
                             </div>

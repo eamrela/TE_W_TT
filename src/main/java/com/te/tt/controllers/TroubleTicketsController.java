@@ -79,6 +79,7 @@ public class TroubleTicketsController implements Serializable {
     private AssignmentGroups selectedTTEdit_AssignmentGroup;
     private String selectedTTEdit_resolutionAction;
     private String selectedTTEdit_reopenComment;
+    private String selectedTTEdit_rejectionReason;
     private boolean selectedTTEdit_returnToInititaor;
     private TroubleTicketStatus selectedTTEdit_Status;
     
@@ -122,13 +123,23 @@ public class TroubleTicketsController implements Serializable {
         }
         return false;
     }
+   
+    public boolean isContextMenuRejectDisabled() {
+        if(selectedTT!=null){
+            if(selectedTT.getTtStatus().getStatusName().equals("Queued") || 
+                    selectedTT.getTtStatus().getStatusName().equals("Assigned") ||
+                      selectedTT.getTtStatus().getStatusName().equals("Pending")){
+                return false;
+            }
+        }
+        return true;
+    }
     
     public boolean isContextMenuStartWorkingDisabled() {
         if(selectedTT!=null){
-            if(!selectedTT.getTtStatus().getStatusName().equals("Queued") || 
-                    !selectedTT.getTtStatus().getStatusName().equals("Assigned") ||
-                    selectedTT.getTtStatus().getStatusName().equals("Cancelled") ||
-                    selectedTT.getTtStatus().getStatusName().equals("Closed")){
+            if(selectedTT.getTtStatus().getStatusName().equals("Cancelled") ||
+                    selectedTT.getTtStatus().getStatusName().equals("Closed") || 
+                     selectedTT.getTtStatus().getStatusName().equals("Resolved")){
                 return true;
             }
         }
@@ -137,7 +148,7 @@ public class TroubleTicketsController implements Serializable {
     
     public boolean isContextMenuReopenDisabled() {
         if(selectedTT!=null){
-            if(selectedTT.getTtStatus().getStatusName().equals("Cleared")){
+            if(selectedTT.getTtStatus().getStatusName().equals("Resolved")){
                 return false;
             }
         }
@@ -158,11 +169,20 @@ public class TroubleTicketsController implements Serializable {
         if(selectedTT!=null){
             if(selectedTT.getTtStatus().getStatusName().equals("Cancelled") ||
                     selectedTT.getTtStatus().getStatusName().equals("Closed") || 
-                    selectedTT.getTtStatus().getStatusName().equals("Cleared")){
+                    selectedTT.getTtStatus().getStatusName().equals("Resolved")){
                 return true;
             }
         }
         return false;
+    }
+    
+    public boolean isContextMenuCloseDisabled(){
+        if(selectedTT!=null){
+            if(selectedTT.getTtStatus().getStatusName().equals("Resolved")){
+                return false;
+            }
+        }
+        return true;
     }
     
     public TroubleTicketStatus getSelectedTTEdit_Status() {
@@ -189,6 +209,15 @@ public class TroubleTicketsController implements Serializable {
         return selectedTTEdit_resolutionAction;
     }
 
+    public String getSelectedTTEdit_rejectionReason() {
+        return selectedTTEdit_rejectionReason;
+    }
+
+    public void setSelectedTTEdit_rejectionReason(String selectedTTEdit_rejectionReason) {
+        this.selectedTTEdit_rejectionReason = selectedTTEdit_rejectionReason;
+    }
+
+    
     public String getSelectedTTEdit_reopenComment() {
         return selectedTTEdit_reopenComment;
     }
@@ -556,12 +585,15 @@ public class TroubleTicketsController implements Serializable {
         if(selectedTT!=null){
             selectedTTEdit_AssignmentGroup = null;
             selectedTTEdit_resolutionAction = null;
+            selectedTTEdit_rejectionReason = null;
             selectedTTEdit_reopenComment = null;
-            selectedTTEdit_returnToInititaor = false;
+            selectedTTEdit_returnToInititaor = true;
             selectedTTEdit_Status = null;
           
             selectedTTEdit_AssignmentGroup = selectedTT.getTtAssignmentGroup();
+            setAssignmentToInititaor();
             selectedTTEdit_resolutionAction = selectedTT.getResolutionAction();
+            selectedTTEdit_rejectionReason = selectedTT.getRejectionReason();
             selectedTTEdit_Status = selectedTT.getTtStatus();
         }
     }
@@ -599,8 +631,34 @@ public class TroubleTicketsController implements Serializable {
             
             selectedTT.setResolutionAction(selectedTTEdit_resolutionAction);
             selectedTT.setTtAssignmentGroup(selectedTTEdit_AssignmentGroup);
-            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Cleared"));
+            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Resolved"));
             selectedTT.setResolvedBy(usersController.getLoggedInUser());
+            
+            if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
+            selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }else{
+                selectedTT.setTroubleTicketInvolvmentCollection(new ArrayList<TroubleTicketInvolvment>());
+                selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }
+           
+          updateEdit();
+        }
+    }
+    public void updateReject(){
+        if(selectedTT!=null && selectedTTEdit_rejectionReason!=null){
+            troubleTicketInvolvmentController.prepareCreate();
+            troubleTicketInvolvmentController.getSelected().setTtId(selectedTT);
+            troubleTicketInvolvmentController.getSelected().setInvolvmentBy(usersController.getLoggedInUser());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentTime(new Date());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentType("Rejection");
+            troubleTicketInvolvmentController.getSelected().setPreviousGroup(selectedTT.getTtAssignmentGroup());
+            troubleTicketInvolvmentController.getSelected().setCurrentGroup(selectedTTEdit_AssignmentGroup);
+            
+            selectedTT.setRejectionReason(selectedTTEdit_rejectionReason);
+            selectedTT.setTtAssignmentGroup(selectedTTEdit_AssignmentGroup);
+            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Rejected"));
+            selectedTT.setRejectedBy(usersController.getLoggedInUser());
+            selectedTT.setRejectionTime(new Date());
             
             if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
             selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
@@ -634,6 +692,30 @@ public class TroubleTicketsController implements Serializable {
               updateEdit();
       }
     }
+    public void updateClose(){
+        if(selectedTT!=null){
+            troubleTicketInvolvmentController.prepareCreate();
+            troubleTicketInvolvmentController.getSelected().setTtId(selectedTT);
+            troubleTicketInvolvmentController.getSelected().setInvolvmentBy(usersController.getLoggedInUser());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentTime(new Date());
+            troubleTicketInvolvmentController.getSelected().setInvolvmentType("Closure");
+            troubleTicketInvolvmentController.getSelected().setPreviousGroup(selectedTT.getTtAssignmentGroup());
+            troubleTicketInvolvmentController.getSelected().setCurrentGroup(selectedTT.getTtAssignmentGroup());
+            
+            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Closed"));
+            selectedTT.setClosedBy(usersController.getLoggedInUser());
+            selectedTT.setCloseTime(new Date());
+            
+            if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
+            selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }else{
+                selectedTT.setTroubleTicketInvolvmentCollection(new ArrayList<TroubleTicketInvolvment>());
+                selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());
+            }
+           
+          updateEdit();
+        }
+    }
     
     public void startWorking(){
         if(selectedTT!=null){
@@ -645,7 +727,7 @@ public class TroubleTicketsController implements Serializable {
             troubleTicketInvolvmentController.getSelected().setPreviousGroup(selectedTT.getTtAssignmentGroup());
             troubleTicketInvolvmentController.getSelected().setCurrentGroup(selectedTT.getTtAssignmentGroup());
             
-            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Under Invistigation"));
+            selectedTT.setTtStatus(troubleTicketStatusController.getTroubleTicketStatus("Work In progress"));
             
             if(selectedTT.getTroubleTicketInvolvmentCollection()!=null){
             selectedTT.getTroubleTicketInvolvmentCollection().add(troubleTicketInvolvmentController.create());

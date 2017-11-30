@@ -94,6 +94,10 @@
                                      <f:facet name="footer">
                                          <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{troubleTicketTitlesController.prepareCreate}" update=":addTitleForm" oncomplete="PF('addTitleDlg').show()"/>
                                         <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{troubleTicketTitlesController.destroy}" update=":titlesForm:growl,:titlesForm:titlesTbl" disabled="#{empty troubleTicketTitlesController.selected}"/>
+                                        <h:commandLink>
+                                            <img src="csv.png"/>
+                                           <p:dataExporter type="csv" target="titlesTbl" fileName="TT_Titles" />
+                                       </h:commandLink>
                                     </f:facet>
                                 </p:dataTable>
                             </div>

@@ -99,6 +99,37 @@ public class TroubleTickets implements Serializable {
     private Users ttCreator;
     @OneToMany(mappedBy = "ttId")
     private Collection<TroubleTicketInvolvment> troubleTicketInvolvmentCollection;
+    @Size(max = 2147483647)
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
+    @Column(name = "rejection_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date rejectionTime;
+    @Column(name = "event_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date eventTime;
+    @Size(max = 2147483647)
+    @Column(name = "external_tt_id")
+    private String externalTtId;
+    @Column(name = "close_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date closeTime;
+    @Column(name = "real_close_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date realCloseTime;
+    @Column(name = "major_incident")
+    private Boolean majorIncident;
+    @OneToMany(mappedBy = "ttId")
+    private Collection<TroubleTicketSla> troubleTicketSlaCollection;
+    @JoinColumn(name = "closed_by", referencedColumnName = "user_name")
+    @ManyToOne
+    private Users closedBy;
+    @JoinColumn(name = "area", referencedColumnName = "area_name")
+    @ManyToOne
+    private Areas area;
+    @JoinColumn(name = "rejected_by", referencedColumnName = "user_name")
+    @ManyToOne
+    private Users rejectedBy;
 
     public TroubleTickets() {
     }
@@ -287,6 +318,94 @@ public class TroubleTickets implements Serializable {
 
     public void setTtInitatorGroup(AssignmentGroups ttInitatorGroup) {
         this.ttInitatorGroup = ttInitatorGroup;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+
+    public Date getRejectionTime() {
+        return rejectionTime;
+    }
+
+    public void setRejectionTime(Date rejectionTime) {
+        this.rejectionTime = rejectionTime;
+    }
+
+    public Date getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(Date eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public String getExternalTtId() {
+        return externalTtId;
+    }
+
+    public void setExternalTtId(String externalTtId) {
+        this.externalTtId = externalTtId;
+    }
+
+    public Date getCloseTime() {
+        return closeTime;
+    }
+
+    public void setCloseTime(Date closeTime) {
+        this.closeTime = closeTime;
+    }
+
+    public Date getRealCloseTime() {
+        return realCloseTime;
+    }
+
+    public void setRealCloseTime(Date realCloseTime) {
+        this.realCloseTime = realCloseTime;
+    }
+
+    public Boolean getMajorIncident() {
+        return majorIncident;
+    }
+
+    public void setMajorIncident(Boolean majorIncident) {
+        this.majorIncident = majorIncident;
+    }
+    @XmlTransient
+    public Collection<TroubleTicketSla> getTroubleTicketSlaCollection() {
+        return troubleTicketSlaCollection;
+    }
+
+    public void setTroubleTicketSlaCollection(Collection<TroubleTicketSla> troubleTicketSlaCollection) {
+        this.troubleTicketSlaCollection = troubleTicketSlaCollection;
+    }
+
+    public Users getClosedBy() {
+        return closedBy;
+    }
+
+    public void setClosedBy(Users closedBy) {
+        this.closedBy = closedBy;
+    }
+
+    public Areas getArea() {
+        return area;
+    }
+
+    public void setArea(Areas area) {
+        this.area = area;
+    }
+
+    public Users getRejectedBy() {
+        return rejectedBy;
+    }
+
+    public void setRejectedBy(Users rejectedBy) {
+        this.rejectedBy = rejectedBy;
     }
     
     
